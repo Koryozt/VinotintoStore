@@ -9,5 +9,5 @@ namespace VM.Persistence;
 
 public static class AssemblyReference
 {
-    public static Assembly Assembly = typeof(DependencyInjection).Assembly;
+    public static readonly Assembly Assembly = typeof(DependencyInjection).Assembly;
 }

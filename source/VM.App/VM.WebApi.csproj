@@ -26,4 +26,12 @@
     <ProjectReference Include="..\VM.Presentation\VM.Presentation.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\Administrador\source\repos\.NET\VinotintoMarketplace\source\VM.App\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="C:\Users\Administrador\source\repos\.NET\VinotintoMarketplace\source\VM.App\.editorconfig" />
+  </ItemGroup>
+
 </Project>
