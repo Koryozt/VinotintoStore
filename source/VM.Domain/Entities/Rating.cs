@@ -11,7 +11,7 @@ namespace VM.Domain.Entities;
 
 public sealed class Rating : AggregateRoot, IAuditableEntity
 {
-    public Rating(
+    private Rating(
         Guid id,
         Score score,
         LongText comment,

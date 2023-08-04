@@ -10,7 +10,7 @@ namespace VM.Domain.Entities;
 
 public sealed class Payment : AggregateRoot, IAuditableEntity
 {
-    public Payment(
+    private Payment(
         Guid id,
         Name method,
         Amount amount,

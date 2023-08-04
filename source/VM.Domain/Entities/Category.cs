@@ -12,7 +12,7 @@ namespace VM.Domain.Entities;
 
 public sealed class Category : AggregateRoot, IAuditableEntity
 {
-    public Category(Guid id, Name name) : base(id)
+    private Category(Guid id, Name name) : base(id)
     {
         Name = name;
     }

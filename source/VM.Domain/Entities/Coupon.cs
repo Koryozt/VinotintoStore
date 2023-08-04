@@ -11,7 +11,7 @@ namespace VM.Domain.Entities;
 
 public sealed class Coupon : AggregateRoot, IAuditableEntity
 {
-    public Coupon(
+    private Coupon(
         Guid id,
         Code code,
         Amount discount,

@@ -11,7 +11,7 @@ namespace VM.Domain.Entities;
 
 public sealed class ShoppingCart : AggregateRoot, IAuditableEntity
 {
-    public ShoppingCart(Guid id) : base(id)
+    private ShoppingCart(Guid id) : base(id)
     {
     }
 

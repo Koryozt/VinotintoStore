@@ -11,9 +11,17 @@ namespace VM.Domain.Entities;
 
 public sealed class User : AggregateRoot, IAuditableEntity
 {
-    private User(Guid id) : base(id)
+    private User(
+        Guid id,
+        Name firstname,
+        Name lastname,
+        Email email,
+        Password password) : base(id)
     {
-
+        Firstname = firstname;
+        Lastname = lastname;
+        Email = email;
+        Password = password;
     }
 
     public Name Firstname { get; private set; }

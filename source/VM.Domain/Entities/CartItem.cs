@@ -10,7 +10,7 @@ namespace VM.Domain.Entities;
 
 public sealed class CartItem : AggregateRoot, IAuditableEntity
 {
-    public CartItem(
+    private CartItem(
         Guid id,
         Quantity quantity,
         Amount totalPrice,

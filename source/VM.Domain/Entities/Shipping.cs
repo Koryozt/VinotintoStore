@@ -10,7 +10,7 @@ namespace VM.Domain.Entities;
 
 public sealed class Shipping : AggregateRoot, IAuditableEntity
 {
-    public Shipping(
+    private Shipping(
         Guid id,
         LongText address,
         Amount cost,

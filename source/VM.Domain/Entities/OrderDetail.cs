@@ -10,7 +10,7 @@ namespace VM.Domain.Entities;
 
 public sealed class OrderDetail : AggregateRoot, IAuditableEntity
 {
-    public OrderDetail(
+    private OrderDetail(
         Guid id,
         Quantity quantity,
         Amount price,

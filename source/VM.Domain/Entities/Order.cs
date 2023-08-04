@@ -12,7 +12,7 @@ namespace VM.Domain.Entities;
 
 public sealed class Order : AggregateRoot, IAuditableEntity
 {
-    public Order(
+    private Order(
         Guid id,
         Amount totalAmount,
         User user,

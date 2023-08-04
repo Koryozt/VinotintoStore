@@ -12,7 +12,7 @@ namespace VM.Domain.Entities;
 
 public sealed class Product : AggregateRoot, IAuditableEntity
 {
-    public Product(
+    private Product(
         Guid id,
         Name name,
         LongText description,
