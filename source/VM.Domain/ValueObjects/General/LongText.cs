@@ -24,9 +24,9 @@ public sealed class LongText : ValueObject
 
     }
 
-    public static Result<Name> Create(string name) =>
-        Result.Create(name)
-            .Ensure(x => !string.IsNullOrEmpty(name),
+    public static Result<LongText> Create(string text) =>
+        Result.Create(text)
+            .Ensure(x => !string.IsNullOrEmpty(text),
                 DomainErrors.LongText.Empty)
             .Ensure(x => x.Length < MaxLength,
                 DomainErrors.LongText.TooLong)

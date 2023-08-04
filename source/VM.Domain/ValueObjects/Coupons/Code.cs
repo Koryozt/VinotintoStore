@@ -29,7 +29,8 @@ public sealed class Code : ValueObject
             .Ensure(x => x.Length >= MinLength,
                 DomainErrors.Code.TooShort)
             .Ensure(x => x.All(char.IsLetterOrDigit),
-                DomainErrors.Code.InvalidForm)
+                DomainErrors.Code.InvalidFormat)
+            .Map(x => new Code(x));
 
     public override IEnumerable<object> GetAtomicValues()
     {

@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <Folder Include="Exceptions\" />
-    <Folder Include="Abstract\" />
+    <Folder Include="Abstractions\" />
   </ItemGroup>
 
 </Project>

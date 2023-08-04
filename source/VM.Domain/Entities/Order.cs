@@ -20,12 +20,14 @@ public sealed class Order : AggregateRoot, IAuditableEntity
         Payment payment) : base(id)
     {
         TotalAmount = totalAmount;
+        IsCanceled = false;
         User = user;
         Shipping = shipping;
         Payment = payment;
     }
 
     public Amount TotalAmount { get; set; }
+    public bool IsCanceled { get; set; }
     public Guid UserId { get; set; }
     public User User { get; set; }
     public Shipping Shipping { get; set; }
