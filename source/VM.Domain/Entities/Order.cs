@@ -12,6 +12,8 @@ namespace VM.Domain.Entities;
 
 public sealed class Order : AggregateRoot, IAuditableEntity
 {
+    private readonly List<OrderDetail> _orderDetails = new();
+
     private Order(
         Guid id,
         Amount totalAmount,
@@ -32,7 +34,7 @@ public sealed class Order : AggregateRoot, IAuditableEntity
     public User User { get; set; }
     public Shipping Shipping { get; set; }
     public Payment Payment { get; set; }
-    public ICollection<OrderDetail> OrderDetails { get; set; }
+    public IReadOnlyCollection<OrderDetail> OrderDetails => _orderDetails;
     public DateTime CreatedOnUtc { get; set; }
     public DateTime? ModifiedOnUtc { get; set; }
 }

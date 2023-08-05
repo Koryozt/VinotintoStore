@@ -11,6 +11,8 @@ namespace VM.Domain.Entities;
 
 public sealed class ShoppingCart : AggregateRoot, IAuditableEntity
 {
+    private readonly List<CartItem> _cartItems = new();
+
     private ShoppingCart(
         Guid id,
         User user) : base(id)
@@ -20,7 +22,7 @@ public sealed class ShoppingCart : AggregateRoot, IAuditableEntity
 
     public Guid UserId { get; set; }
     public User User { get; set; }
-    public ICollection<CartItem> CartItems { get; set; }
+    public IReadOnlyCollection<CartItem> CartItems => _cartItems;
     public DateTime CreatedOnUtc { get; set; }
     public DateTime? ModifiedOnUtc { get; set; }
 }

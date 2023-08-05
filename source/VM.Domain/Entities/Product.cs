@@ -12,6 +12,10 @@ namespace VM.Domain.Entities;
 
 public sealed class Product : AggregateRoot, IAuditableEntity
 {
+    private readonly List<Category> _categories = new();
+    private readonly List<OrderDetail> _orderDetails = new();
+    private readonly List<Rating> _ratings = new();
+
     private Product(
         Guid id,
         Name name,
@@ -29,9 +33,9 @@ public sealed class Product : AggregateRoot, IAuditableEntity
     public LongText Description { get; set; }
     public Amount Price { get; set; }
     public Quantity Stock { get; set; }
-    public ICollection<Category> Categories { get; set; }
-    public ICollection<OrderDetail> OrderDetails { get; set; }
-    public ICollection<Rating> Ratings { get; set; }
+    public IReadOnlyCollection<Category> Categories => _categories;
+    public IReadOnlyCollection<OrderDetail> OrderDetails => _orderDetails;
+    public IReadOnlyCollection<Rating> Ratings => _ratings;
     public DateTime CreatedOnUtc { get; set; }
     public DateTime? ModifiedOnUtc { get; set; }
 }

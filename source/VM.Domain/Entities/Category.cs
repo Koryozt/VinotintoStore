@@ -12,13 +12,15 @@ namespace VM.Domain.Entities;
 
 public sealed class Category : AggregateRoot, IAuditableEntity
 {
+    private readonly List<Product> _products = new();
+
     private Category(Guid id, Name name) : base(id)
     {
         Name = name;
     }
 
     public Name Name { get; set; }
-    public ICollection<Product> Products { get; set; }
+    public IReadOnlyCollection<Product> Products => _products;
     public DateTime CreatedOnUtc { get; set; }
     public DateTime? ModifiedOnUtc { get; set; }
 }
