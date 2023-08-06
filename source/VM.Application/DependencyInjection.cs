@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using VM.Application.Behaviors;
 
 namespace VM.Application;
 
@@ -15,7 +17,10 @@ public static class DependencyInjection
         services.AddMediatR(configuration =>
             configuration.RegisterServicesFromAssembly(AssemblyReference.Assembly));
 
-        services.AddValidatorsFromAssembly(AssemblyReference.Assembly);
+        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
+
+        services.AddValidatorsFromAssembly(AssemblyReference.Assembly,
+            includeInternalTypes:true);
 
         return services;
     }
