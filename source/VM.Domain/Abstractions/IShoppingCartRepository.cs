@@ -8,7 +8,7 @@ using VM.Domain.Entities;
 
 namespace VM.Domain.Abstractions;
 
-public interface IShopingCartRepository
+public interface IShoppingCartRepository
 {
     Task<ShoppingCart?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
     Task<IEnumerable<ShoppingCart>> GetByConditionAsync(

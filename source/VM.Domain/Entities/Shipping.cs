@@ -13,12 +13,10 @@ public sealed class Shipping : AggregateRoot, IAuditableEntity
     private Shipping(
         Guid id,
         LongText address,
-        Amount cost,
-        Order order) : base(id)
+        Amount cost) : base(id)
     {
         Address = address;
         Cost = cost;
-        Order = order;
     }
 
     public LongText Address { get; set; }

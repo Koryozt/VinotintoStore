@@ -13,12 +13,10 @@ public sealed class Payment : AggregateRoot, IAuditableEntity
     private Payment(
         Guid id,
         Name method,
-        Amount amount,
-        Order order) : base(id)
+        Amount amount) : base(id)
     {
         Method = method;
         Amount = amount;
-        Order = order;
     }
 
     public Name Method { get; set; }

@@ -18,17 +18,20 @@ public sealed class Product : AggregateRoot, IAuditableEntity
 
     private Product(
         Guid id,
+        string photo,
         Name name,
         LongText description,
         Amount price,
         Quantity stock) : base(id)
     {
+        Photo = photo;
         Name = name;
         Description = description;
         Price = price;
         Stock = stock;
     }
 
+    public string Photo { get; set; }
     public Name Name { get; set; }
     public LongText Description { get; set; }
     public Amount Price { get; set; }
