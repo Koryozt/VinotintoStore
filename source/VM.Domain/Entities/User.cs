@@ -11,6 +11,8 @@ namespace VM.Domain.Entities;
 
 public sealed class User : AggregateRoot, IAuditableEntity
 {
+    private readonly List<Order> _orders = new();
+
     private User(
         Guid id,
         Name firstname,
@@ -32,4 +34,5 @@ public sealed class User : AggregateRoot, IAuditableEntity
     public DateTime? ModifiedOnUtc { get; set; }
     public Guid ShoppingCartId { get; set; }
     public ShoppingCart ShoppingCart { get; set; }
+    public IReadOnlyCollection<Order> Orders => _orders;
 }
