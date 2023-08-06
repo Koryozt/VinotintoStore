@@ -12,7 +12,7 @@ public interface IRatingRepository
 {
     Task<Rating?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
     Task<IEnumerable<Rating>> GetByConditionAsync(
-        Expression<Func<IEnumerable<Rating>, bool>> condition, CancellationToken cancellationToken);
+        Expression<Func<Rating, bool>> condition, CancellationToken cancellationToken);
     Task AddAsync(Rating rating, CancellationToken cancellationToken);
     void Update(Rating order);
 }

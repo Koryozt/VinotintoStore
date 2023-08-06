@@ -12,7 +12,7 @@ public interface IProductRepository
 {
     Task<Product?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
     Task<IEnumerable<Product>> GetByConditionAsync(
-        Expression<Func<IEnumerable<Product>, bool>> condition, CancellationToken cancellationToken);
+        Expression<Func<Product, bool>> condition, CancellationToken cancellationToken);
     Task AddAsync(Product product, CancellationToken cancellationToken);
     void Update(Product product);
 }

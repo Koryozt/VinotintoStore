@@ -12,7 +12,7 @@ public interface ICategoryRepository
 {
     Task<Category?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
     Task<IEnumerable<Category>> GetByConditionAsync(
-        Expression<Func<IEnumerable<Category>, bool>> condition, CancellationToken cancellationToken);
+        Expression<Func<Category, bool>> condition, CancellationToken cancellationToken);
     Task AddAsync(Category category, CancellationToken cancellationToken);
     void Update(Category category);
 }

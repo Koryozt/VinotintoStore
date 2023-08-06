@@ -12,7 +12,7 @@ public interface IOrderDetailRepository
 {
     Task<Order?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
     Task<IEnumerable<OrderDetail>> GetByConditionAsync(
-        Expression<Func<IEnumerable<OrderDetail>, bool>> condition, CancellationToken cancellationToken);
+        Expression<Func<OrderDetail, bool>> condition, CancellationToken cancellationToken);
     Task AddAsync(OrderDetail orderDetail, CancellationToken cancellationToken);
     void Update(OrderDetail orderDetail);
 }

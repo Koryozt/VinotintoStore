@@ -11,7 +11,7 @@ internal interface IPaymentRepository
 {
     Task<Payment?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
     Task<IEnumerable<Payment>> GetByConditionAsync(
-        Expression<Func<IEnumerable<Payment>, bool>> condition, CancellationToken cancellationToken);
+        Expression<Func<Payment, bool>> condition, CancellationToken cancellationToken);
     Task AddAsync(Payment payment, CancellationToken cancellationToken);
     void Update(Payment payment);
 }

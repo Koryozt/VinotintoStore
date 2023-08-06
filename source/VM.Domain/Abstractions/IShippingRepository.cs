@@ -12,7 +12,7 @@ public interface IShippingRepository
 {
     Task<Shipping?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
     Task<IEnumerable<Shipping>> GetByConditionAsync(
-        Expression<Func<IEnumerable<Shipping>, bool>> condition, CancellationToken cancellationToken);
+        Expression<Func<Shipping, bool>> condition, CancellationToken cancellationToken);
     Task AddAsync(Shipping shipping, CancellationToken cancellationToken);
     void Update(Shipping shipping);
 }

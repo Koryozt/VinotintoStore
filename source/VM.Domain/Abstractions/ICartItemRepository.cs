@@ -12,7 +12,7 @@ public interface ICartItemRepository
 {
     Task<CartItem?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
     Task<IEnumerable<CartItem>> GetByConditionAsync(
-        Expression<Func<IEnumerable<CartItem>, bool>> condition, CancellationToken cancellationToken);
+        Expression<Func<CartItem, bool>> condition, CancellationToken cancellationToken);
     Task AddAsync(CartItem cartItem, CancellationToken cancellationToken);
     void Update(CartItem cartItem);
 }
