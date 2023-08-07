@@ -14,5 +14,5 @@ public interface IRatingRepository
     Task<IEnumerable<Rating>> GetByConditionAsync(
         Expression<Func<Rating, bool>> condition, CancellationToken cancellationToken);
     Task AddAsync(Rating rating, CancellationToken cancellationToken);
-    void Update(Rating order);
+    void Update(Rating rating);
 }

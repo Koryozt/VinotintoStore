@@ -12,14 +12,17 @@ namespace VM.Application;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApplicationLayer(this IServiceCollection services)
+    public static IServiceCollection AddApplicationLayer(
+        this IServiceCollection services)
     {
         services.AddMediatR(configuration =>
             configuration.RegisterServicesFromAssembly(AssemblyReference.Assembly));
 
-        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
+        services.AddScoped(
+            typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
 
-        services.AddValidatorsFromAssembly(AssemblyReference.Assembly,
+        services.AddValidatorsFromAssembly(
+            AssemblyReference.Assembly,
             includeInternalTypes:true);
 
         return services;

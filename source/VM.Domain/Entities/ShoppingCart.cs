@@ -13,11 +13,8 @@ public sealed class ShoppingCart : AggregateRoot, IAuditableEntity
 {
     private readonly List<CartItem> _cartItems = new();
 
-    private ShoppingCart(
-        Guid id,
-        User user) : base(id)
+    private ShoppingCart(Guid id) : base(id)
     {
-        User = user;
     }
 
     public Guid UserId { get; set; }

@@ -1,5 +1,7 @@
 ﻿using System.Reflection;
 
+# pragma warning disable
+
 namespace VM.Domain.Primitives;
 
 /// <summary>

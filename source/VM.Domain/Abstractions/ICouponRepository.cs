@@ -15,8 +15,6 @@ public interface ICouponRepository
     Task<Coupon?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
     Task<IEnumerable<Coupon>> GetByConditionAsync(
         Expression<Func<Coupon, bool>> condition, CancellationToken cancellationToken);
-    Task<Amount> GetProductAmountWithDiscount(
-        Code code, Amount amount, CancellationToken cancellationToken);
     Task AddAsync(Coupon coupon, CancellationToken cancellationToken);
     void Update(Coupon coupon);
 }

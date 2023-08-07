@@ -10,7 +10,7 @@ namespace VM.Domain.Abstractions;
 
 public interface IOrderDetailRepository
 {
-    Task<Order?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+    Task<OrderDetail?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
     Task<IEnumerable<OrderDetail>> GetByConditionAsync(
         Expression<Func<OrderDetail, bool>> condition, CancellationToken cancellationToken);
     Task AddAsync(OrderDetail orderDetail, CancellationToken cancellationToken);

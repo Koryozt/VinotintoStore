@@ -13,14 +13,10 @@ public sealed class OrderDetail : AggregateRoot, IAuditableEntity
     private OrderDetail(
         Guid id,
         Quantity quantity,
-        Amount price,
-        Product product,
-        Order order) : base(id)
+        Amount price) : base(id)
     {
         Quantity = quantity;
         Price = price;
-        Product = product;
-        Order = order;
     }
 
     public Quantity Quantity { get; set; }

@@ -14,12 +14,10 @@ public sealed class Rating : AggregateRoot, IAuditableEntity
     private Rating(
         Guid id,
         Score score,
-        LongText comment,
-        Product product) : base(id)
+        LongText comment) : base(id)
     {
         Score = score;
         Comment = comment;
-        Product = product;
     }
 
     public Score Score { get; set; }

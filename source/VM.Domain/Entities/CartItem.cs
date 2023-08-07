@@ -13,14 +13,10 @@ public sealed class CartItem : AggregateRoot, IAuditableEntity
     private CartItem(
         Guid id,
         Quantity quantity,
-        Amount totalPrice,
-        Product product,
-        ShoppingCart shoppingCart) : base(id)
+        Amount totalPrice) : base(id)
     {
         Quantity = quantity;
         TotalPrice = totalPrice;
-        Product = product;
-        ShoppingCart = shoppingCart;
     }
 
     public Quantity Quantity { get; set; }

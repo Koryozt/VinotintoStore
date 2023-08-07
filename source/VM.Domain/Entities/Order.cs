@@ -16,16 +16,10 @@ public sealed class Order : AggregateRoot, IAuditableEntity
 
     private Order(
         Guid id,
-        Amount totalAmount,
-        User user,
-        Shipping shipping,
-        Payment payment) : base(id)
+        Amount totalAmount) : base(id)
     {
         TotalAmount = totalAmount;
         IsCanceled = false;
-        User = user;
-        Shipping = shipping;
-        Payment = payment;
     }
 
     public Amount TotalAmount { get; set; }

@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace VM.Domain.Primitives;
 
+# pragma warning disable
+
 public abstract class AggregateRoot : Entity
 {
     private readonly List<IDomainEvent> _domainEvents = new();
