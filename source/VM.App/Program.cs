@@ -13,7 +13,7 @@ builder.Services.AddSwaggerGen();
 builder.Services
     .AddApplicationLayer()
     .AddInfrastructureLayer()
-    .AddPersistenceLayer()
+    .AddPersistenceLayer(builder.Configuration)
     .AddPresentationLayer();
 
 builder.Host.UseSerilog((context, configuration) =>
