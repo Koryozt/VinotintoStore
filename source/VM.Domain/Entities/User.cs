@@ -35,4 +35,40 @@ public sealed class User : AggregateRoot, IAuditableEntity
     public Guid ShoppingCartId { get; set; }
     public ShoppingCart ShoppingCart { get; set; }
     public IReadOnlyCollection<Order> Orders => _orders;
+
+    public static User Create(
+        Guid id,
+        Name firstname,
+        Name lastname,
+        Email email,
+        Password password)
+    {
+        var user = new User(
+            id,
+            firstname,
+            lastname,
+            email,
+            password)
+        {
+            CreatedOnUtc = DateTime.UtcNow,
+            ModifiedOnUtc = DateTime.UtcNow
+        };
+
+        return user;
+    }
+
+    public void AddShoppingCart(ShoppingCart cart)
+    {
+        ShoppingCart = cart;
+        ShoppingCartId = cart.Id;
+    }
+
+    public void AddNewOrder(Order order) =>
+        _orders.Add(order);
+
+    public void ChangeNames(Name firstname, Name lastname)
+    {
+        Firstname = firstname;
+        Lastname = lastname;
+    }
 }

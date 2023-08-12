@@ -26,6 +26,12 @@ public static class DependencyInjection
         services.AddTransient<ICategoryRepository, CategoryRepository>();
         services.AddTransient<ICouponRepository, CouponRepository>();
         services.AddTransient<IOrderDetailRepository, OrderDetailRepository>();
+        services.AddTransient<IOrderRepository, OrderRepository>();
+        services.AddTransient<IPaymentRepository, PaymentRepository>();
+        services.AddTransient<IProductRepository, ProductRepository>();
+        services.AddTransient<IRatingRepository, RatingRepository>();
+        services.AddTransient<IShippingRepository, ShippingRepository>();
+        services.AddTransient<IShoppingCartRepository, ShoppingCartRepository>();
 
         services.AddSingleton<ConvertDomainEventsToOutboxMessagesInterceptor>();
         services.AddSingleton<UpdateAuditableEntitiesInterceptor>();

@@ -26,4 +26,32 @@ public sealed class Rating : AggregateRoot, IAuditableEntity
     public Product Product { get; set; }
     public DateTime CreatedOnUtc { get; set; }
     public DateTime? ModifiedOnUtc { get; set; }
+
+    public static Rating Create(
+        Guid id,
+        Score score,
+        LongText comment,
+        Product product)
+    {
+        var rating = new Rating(
+            id,
+            score,
+            comment)
+        {
+            ProductId = product.Id,
+            Product = product,
+            CreatedOnUtc = DateTime.UtcNow,
+            ModifiedOnUtc = DateTime.UtcNow
+        };
+
+        return rating;
+    }
+
+    public void ModifyCommentAndScoring(
+        LongText comment,
+        Score score)
+    {
+        Comment = comment;
+        Score = score;
+    }
 }

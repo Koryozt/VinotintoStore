@@ -23,4 +23,15 @@ public sealed class Category : AggregateRoot, IAuditableEntity
     public IReadOnlyCollection<Product> Products => _products;
     public DateTime CreatedOnUtc { get; set; }
     public DateTime? ModifiedOnUtc { get; set; }
+
+    public static Category Create(Guid id, Name name) =>
+        new Category(id, name)
+        {
+            CreatedOnUtc = DateTime.UtcNow,
+            ModifiedOnUtc = DateTime.UtcNow
+        };
+    
+    public void AddProduct(Product product) => _products.Add(product);
+
+    public void ChangeName(Name name) => Name = name;
 }

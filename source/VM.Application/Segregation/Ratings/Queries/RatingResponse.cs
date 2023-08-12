@@ -12,5 +12,5 @@ namespace VM.Application.Segregation.Ratings.Queries;
 public sealed record RatingResponse(
     Guid Id,
     Score Score,
-    LongText Comment,
-    ProductResponse Product);
+    string Comment,
+    string ProductName);

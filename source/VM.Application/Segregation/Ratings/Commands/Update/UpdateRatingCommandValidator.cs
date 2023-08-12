@@ -23,8 +23,5 @@ internal class UpdateRatingCommandValidator : AbstractValidator<UpdateRatingComm
         RuleFor(x => x.Comment)
             .NotEmpty()
             .MaximumLength(LongText.MaxLength);
-
-        RuleFor(x => x.ProductId)
-            .NotEmpty();
     }
 }

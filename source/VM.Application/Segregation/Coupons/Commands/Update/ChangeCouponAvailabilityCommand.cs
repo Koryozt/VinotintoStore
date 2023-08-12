@@ -7,4 +7,6 @@ using VM.Application.Abstractions.Messaging;
 
 namespace VM.Application.Segregation.Coupons.Commands.Update;
 
-public sealed record ChangeCouponAvailabilityCommand(bool IsActive) : ICommand;
+public sealed record ChangeCouponAvailabilityCommand(
+    Guid Id, 
+    bool IsActive) : ICommand;

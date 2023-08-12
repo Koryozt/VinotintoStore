@@ -7,4 +7,4 @@ using VM.Application.Abstractions.Messaging;
 
 namespace VM.Application.Segregation.Categories.Commands.Update;
 
-public sealed record UpdateCategoryCommand(string Name) : ICommand;
+public sealed record UpdateCategoryCommand(Guid Id, string Name) : ICommand;

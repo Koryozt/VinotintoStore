@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VM.Domain.Primitives;
+using VM.Domain.Shared;
 using VM.Domain.ValueObjects.General;
 
 namespace VM.Domain.Entities;
@@ -41,4 +42,57 @@ public sealed class Product : AggregateRoot, IAuditableEntity
     public IReadOnlyCollection<Rating> Ratings => _ratings;
     public DateTime CreatedOnUtc { get; set; }
     public DateTime? ModifiedOnUtc { get; set; }
+
+    public static Product Create(
+        Guid id,
+        string photo,
+        Name name,
+        LongText description,
+        Amount price,
+        Quantity stock)
+    {
+        var product = new Product(
+            id,
+            photo,
+            name,
+            description,
+            price,
+            stock);
+
+        // Create DomainEvent here.
+
+        return product;
+    }
+
+    public void AddCategory(Category category) =>
+        _categories.Add(category);
+
+    public void AddOrderDetail(
+        OrderDetail orderDetail,
+        int remaining)
+    {
+        Result<Quantity> remainingResult = Quantity.Create(
+            remaining);
+
+        Stock = remainingResult.Value;
+
+        _orderDetails.Add(orderDetail);
+    }
+
+    public void AddRating(Rating rating) =>
+        _ratings.Add(rating);
+
+    public void ChangeData(
+        Name name,
+        LongText description,
+        Amount price,
+        Quantity stock)
+    {
+        // Make a domain event when updating.
+
+        Name = name;
+        Description = description;
+        Price = price;
+        Stock = stock;
+    }
 }

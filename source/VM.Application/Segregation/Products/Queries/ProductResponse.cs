@@ -11,9 +11,10 @@ using VM.Domain.ValueObjects.General;
 namespace VM.Application.Segregation.Products.Queries;
 
 public sealed record ProductResponse(
+    Guid Id,
     string Name,
     string Description,
     double Price,
     int Stock,
-    IReadOnlyCollection<CategoryResponse> Categories,
-    IReadOnlyCollection<RatingResponse> Ratings);
+    IReadOnlyCollection<ProductCategoryResponse> Categories,
+    IReadOnlyCollection<ProductRatingResponse> Ratings);

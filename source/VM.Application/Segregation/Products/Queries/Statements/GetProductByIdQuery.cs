@@ -7,4 +7,5 @@ using VM.Application.Abstractions.Messaging;
 
 namespace VM.Application.Segregation.Products.Queries.Statements;
 
-public sealed record GetProductByIdQuery(Guid Id) : IQuery<ProductResponse>;
+public sealed record GetProductByIdQuery(Guid Id) : 
+    IQuery<ProductResponse>;

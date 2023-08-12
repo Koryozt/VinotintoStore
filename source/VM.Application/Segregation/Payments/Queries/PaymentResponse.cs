@@ -10,6 +10,6 @@ namespace VM.Application.Segregation.Payments.Queries;
 
 public sealed record PaymentResponse(
     Guid Id,
-    Name Method,
-    Amount Amount,
-    Order Order);
+    string Method,
+    double Amount,
+    PaymentOrderResponse Order);

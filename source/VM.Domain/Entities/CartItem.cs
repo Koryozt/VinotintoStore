@@ -27,4 +27,29 @@ public sealed class CartItem : AggregateRoot, IAuditableEntity
     public ShoppingCart ShoppingCart { get; set; }
     public DateTime CreatedOnUtc { get; set; }
     public DateTime? ModifiedOnUtc { get; set; }
+
+    public static CartItem AddItemToShoppingCart(
+        Guid id,
+        Amount totalPrice,
+        Quantity quantity,
+        Product cartProduct,
+        ShoppingCart shoppingCart)
+    {
+        var cartItem = new CartItem(
+            id,
+            quantity,
+            totalPrice)
+        {
+            ProductId = cartProduct.Id,
+            ShoppingCartId = shoppingCart.Id,
+            Product = cartProduct,
+            ShoppingCart = shoppingCart,
+            CreatedOnUtc = DateTime.UtcNow,
+            ModifiedOnUtc = DateTime.UtcNow
+        };
+
+        shoppingCart.AddNewItem(cartItem);
+
+        return cartItem;
+    }
 }

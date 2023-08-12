@@ -10,5 +10,6 @@ using VM.Application.Segregation.Users.Queries;
 namespace VM.Application.Segregation.ShoppingCarts.Queries;
 
 public sealed record ShoppingCartResponse(
-    UserResponse User,
-    IEnumerable<CartItemResponse> Items);
+    Guid Id,
+    ShoppingCartUserResponse User,
+    IEnumerable<ShoppingCartItemResponse> Items);

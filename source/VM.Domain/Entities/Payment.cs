@@ -25,4 +25,23 @@ public sealed class Payment : AggregateRoot, IAuditableEntity
     public Order Order { get; set; }
     public DateTime CreatedOnUtc { get; set; }
     public DateTime? ModifiedOnUtc { get; set; }
+
+    public static Payment Create(
+        Guid id,
+        Name method,
+        Amount amount)
+    {
+        var payment = new Payment(
+            id,
+            method,
+            amount);
+
+        return payment;
+    }
+
+    public void SetOrder(Order order)
+    {
+        OrderId = order.Id;
+        Order = order;
+    }
 }

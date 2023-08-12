@@ -9,6 +9,7 @@ using VM.Domain.ValueObjects.General;
 namespace VM.Application.Segregation.Products.Commands.Update;
 
 public sealed record UpdateProductCommand(
+    Guid Id,
     string Name,
     string Description,
     double Price,

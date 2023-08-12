@@ -22,4 +22,21 @@ public sealed class ShoppingCart : AggregateRoot, IAuditableEntity
     public IReadOnlyCollection<CartItem> CartItems => _cartItems;
     public DateTime CreatedOnUtc { get; set; }
     public DateTime? ModifiedOnUtc { get; set; }
+
+    public static ShoppingCart Create(
+        Guid id,
+        User user)
+    {
+        var shoppingCart = new ShoppingCart(id)
+        {
+            UserId = user.Id,
+            User = user,
+            CreatedOnUtc = DateTime.UtcNow,
+            ModifiedOnUtc = DateTime.UtcNow
+        };
+
+        return shoppingCart;
+    }
+
+    public void AddNewItem(CartItem cartItem) => _cartItems.Add(cartItem);
 }

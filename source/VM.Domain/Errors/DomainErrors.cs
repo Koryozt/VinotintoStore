@@ -11,6 +11,182 @@ namespace VM.Domain.Errors;
 
 public static class DomainErrors
 {
+    public static class CartItem
+    {
+        public static Func<Guid, Error> NotFound = id => new Error(
+            "CartItem.NotFound",
+            $"The item with the id {id} was not found");
+
+        public static Func<Guid, Error> ProductNotFound = productId =>
+            new Error(
+                "CartItem.ProductNotFound",
+                $"The product with the id {productId} was not found");
+
+        public static Func<Guid, Error> ShoppingCartNotFound = shoppingId =>
+            new Error(
+                "CartItem.ShoppingCartNotFound",
+                $"The shopping cart with the id {shoppingId} was not found");
+    }
+
+    public static class Category
+    {
+        public static Func<string, Error> AlreadyExisting = name => new Error(
+            "Category.AlreadyExisting",
+            $"Category with name {name} already exists");
+
+        public static Func<Guid, Error> ProductNotFound = productId =>
+            new Error(
+                "Category.ProductNotFound",
+                $"The product with the id {productId} was not found");
+
+
+        public static Func<string, Error> NotFound = id => new Error(
+            "Category.NotFound",
+            $"The category [{id}] was not found");
+    }
+
+    public static class Coupon
+    {
+        public static Func<string, Error> NotFound = id =>
+            new Error(
+                "Coupon.NotFound",
+                $"The coupon [{id}] was not found");
+
+        public static Func<Guid, Error> ProductNotFound = productId =>
+            new Error(
+                "Coupon.ProductNotFound",
+                $"The product with the id {productId} was not found");
+
+        public static Func<double, Error> InvalidDiscount = discount =>
+            new Error(
+                "Coupon.InvalidDiscount",
+                $"There was an error parsing the value {discount}, check if it's valid");
+    }
+
+    public static class OrderDetail
+    {
+        public static Func<Guid, Error> NotFound = id =>
+            new Error(
+                "OrderDetail.NotFound",
+                $"The order detail with id {id} was not found");
+
+        public static Func<Guid, Error> ProductNotFound = productId =>
+            new Error(
+                "OrderDetail.ProductNotFound",
+                $"The product with id {productId} was not found");
+
+        public static Func<Guid, Error> OrderNotFound = orderId =>
+            new Error(
+                "OrderDetail.OrderNotFound",
+                $"The order with id {orderId} was not found");
+
+        public static Error ProductOutOfStock = new Error(
+            "OrderDetail.ProductOutOfStock",
+            "Can't create a new order detail because product" +
+            "currently has/will have 0 or less units in stock");
+    }
+
+    public static class Order
+    {
+        public static Func<Guid, Error> UserNotFound = userId =>
+            new Error(
+                "Order.UserNotFound",
+                $"The user with id {userId} was not found");
+
+        public static Func<Guid, Error> NotFound = id =>
+            new Error(
+                "Order.NotFound",
+                $"The order with id {id} was not found");
+
+        public static Func<Guid, Error> ProductNotFound =
+            productId => new Error(
+                "Order.ProductNotFound",
+                $"The product with id {productId} was not found");
+    }
+
+    public static class Payment
+    {
+         public static Func<Guid, Error> NotFound = id =>
+            new Error(
+            "Payment.NotFound",
+            $"The payment with the id {id} was not found");
+    }
+
+    public static class Product
+    {
+        public static Func<string, Error> NotFound = id =>
+           new Error(
+           "Product.NotFound",
+           $"The product [{id}] was not found");
+
+        public static Func<string, Error> CategoryNotFound = name =>
+           new Error(
+           "Product.CategoryNotFound",
+           $"The category called {name} was not found");
+
+        public static Error NoPhotoProvided = new Error(
+            "Product.NoPhotoProvided",
+            "No photo or image has been provided for product");
+    }
+
+    public static class Rating
+    {
+        public static Func<Guid, Error> NotFound = id =>
+           new Error(
+           "Rating.NotFound",
+           $"The rating with id {id} was not found");
+
+        public static Func<Guid, Error> ProductNotFound =
+            productId => new Error(
+                "Rating.ProductNotFound",
+                $"The product with id {productId} was not found");
+    }
+
+    public static class Shipping
+    {
+        public static Func<Guid, Error> NotFound = id =>
+           new Error(
+           "Shipping.NotFound",
+           $"The shipping with id {id} was not found");
+
+        public static Func<Guid, Error> OrderNotFound = id =>
+           new Error(
+           "Shipping.OrderNotFound",
+           $"The order with id {id} was not found");
+    }
+
+    public static class ShoppingCart
+    {
+        public static Func<Guid, Error> NotFound = id =>
+            new Error(
+                "ShoppingCart.NotFound",
+                $"The shopping cart with id {id} was not found");
+
+        public static Func<Guid, Error> UserNotFound = userId =>
+            new Error(
+                "ShoppingCart.UserNotFound",
+                $"The user with id {userId} was not found");
+    }
+
+    public static class User
+    {
+        public static Func<Guid, Error> NotFound = id =>
+            new Error(
+                "User.NotFound",
+                $"The user with id {id} was not found");
+
+        public static Func<string, string, Error> InvalidCredentials = 
+            (email, password) =>
+            new Error(
+                "User.InvalidCredentials", 
+                $"The email {email} or the password {password} are invalid");
+
+        public static Func<string, Error> EmailAlreadyInUse = email =>
+            new Error(
+                "User.EmailAlreadyInUse",
+                $"The email {email} is already taken");
+    }
+
     public static class Email
     {
         public static readonly Error Empty = new(

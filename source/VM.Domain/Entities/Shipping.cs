@@ -25,4 +25,23 @@ public sealed class Shipping : AggregateRoot, IAuditableEntity
     public Order Order { get; set; }
     public DateTime CreatedOnUtc { get; set; }
     public DateTime? ModifiedOnUtc { get; set; }
+
+    public static Shipping Create(
+        Guid id,
+        LongText address,
+        Amount cost)
+    {
+        var shipping = new Shipping(
+            id, 
+            address,
+            cost);
+
+        return shipping;
+    }
+
+    public void SetOrder(Order order)
+    {
+        OrderId = order.Id;
+        Order = order;
+    }
 }

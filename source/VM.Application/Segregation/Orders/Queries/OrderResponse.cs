@@ -10,7 +10,7 @@ namespace VM.Application.Segregation.Orders.Queries;
 
 public sealed record OrderResponse(
     Guid Id,
-    Amount TotalAmount,
-    User User,
-    Shipping Shipping,
-    Payment Payment);
+    double TotalAmount,
+    OrderUserResponse User,
+    OrderShippingResponse Shipping,
+    OrderPaymentResponse Payment);

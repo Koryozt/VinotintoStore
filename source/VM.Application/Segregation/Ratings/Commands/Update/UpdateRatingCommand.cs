@@ -10,5 +10,4 @@ namespace VM.Application.Segregation.Ratings.Commands.Update;
 public sealed record UpdateRatingCommand(
     Guid Id,
     Score Score,
-    string Comment,
-    Guid ProductId) : ICommand;
+    string Comment) : ICommand;

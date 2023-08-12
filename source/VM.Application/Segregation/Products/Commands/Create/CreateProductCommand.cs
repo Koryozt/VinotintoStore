@@ -9,6 +9,7 @@ using VM.Domain.ValueObjects.General;
 namespace VM.Application.Segregation.Products.Commands.Create;
 
 public sealed record CreateProductCommand(
+    string Photo,
     string Name,
     string Description,
     double Price,

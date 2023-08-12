@@ -30,4 +30,28 @@ public sealed class Coupon : AggregateRoot, IAuditableEntity
     public bool IsActive { get; set; }
     public DateTime CreatedOnUtc { get; set; }
     public DateTime? ModifiedOnUtc { get; set; }
+
+    public static Coupon Create(
+        Guid id,
+        Code code,
+        Amount discount,
+        DateTime expirationDate,
+        bool isActive)
+    {
+        var coupon = new Coupon(
+            id,
+            code,
+            discount,
+            expirationDate,
+            isActive)
+        {
+            CreatedOnUtc = DateTime.UtcNow,
+            ModifiedOnUtc = DateTime.UtcNow
+        };
+
+        return coupon;
+    }
+
+    public void ChangeAvailability(bool isActive) => 
+        this.IsActive = isActive;
 }

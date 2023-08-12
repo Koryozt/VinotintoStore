@@ -10,5 +10,5 @@ namespace VM.Application.Segregation.Categories.Queries;
 
 public sealed record CategoryResponse(
     Guid Id,
-    Name Name,
-    IReadOnlyCollection<Product> Products);
+    string Name,
+    IReadOnlyCollection<ProductCategoryResponse> Products);

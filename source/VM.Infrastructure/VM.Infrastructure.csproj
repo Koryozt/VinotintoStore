@@ -8,6 +8,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Scrutor" Version="4.2.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VM.Application\VM.Application.csproj" />
+    <ProjectReference Include="..\VM.Domain\VM.Domain.csproj" />
+    <ProjectReference Include="..\VM.Persistence\VM.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

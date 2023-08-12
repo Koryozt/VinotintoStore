@@ -27,4 +27,27 @@ public sealed class OrderDetail : AggregateRoot, IAuditableEntity
     public Order Order { get; set; }
     public DateTime CreatedOnUtc { get; set; }
     public DateTime? ModifiedOnUtc { get; set; }
+
+    public static OrderDetail Create(
+        Guid id,
+        Quantity quantity,
+        Amount price,
+        Product product,
+        Order order)
+    {
+        var orderDetail = new OrderDetail(
+            id,
+            quantity,
+            price)
+        {
+            ProductId = product.Id,
+            OrderId = order.Id,
+            Product = product,
+            Order = order,
+            CreatedOnUtc = DateTime.UtcNow,
+            ModifiedOnUtc = DateTime.UtcNow
+        };
+
+        return orderDetail;
+    }
 }

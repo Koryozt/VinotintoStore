@@ -17,6 +17,7 @@ namespace VM.Application.Segregation.Orders.Commands.Create;
 public sealed record CreateOrderCommand(
     string Method,
     string Address,
+    double Amount,
     double Cost,
     Guid UserId,
-    Guid PaymentId) : ICommand<Guid>;
+    Guid ProductId) : ICommand<Guid>;

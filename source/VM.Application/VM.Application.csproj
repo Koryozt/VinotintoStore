@@ -16,4 +16,10 @@
     <ProjectReference Include="..\VM.Domain\VM.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Segregation\Orders\Events\" />
+    <Folder Include="Segregation\Products\Events\" />
+    <Folder Include="Segregation\Users\Events\" />
+  </ItemGroup>
+
 </Project>

@@ -22,6 +22,10 @@ public sealed class Order : AggregateRoot, IAuditableEntity
         IsCanceled = false;
     }
 
+    private Order()
+    {
+    }
+
     public Amount TotalAmount { get; set; }
     public bool IsCanceled { get; set; }
     public Guid UserId { get; set; }
@@ -31,4 +35,41 @@ public sealed class Order : AggregateRoot, IAuditableEntity
     public IReadOnlyCollection<OrderDetail> OrderDetails => _orderDetails;
     public DateTime CreatedOnUtc { get; set; }
     public DateTime? ModifiedOnUtc { get; set; }
+
+    public void AddOrderDetail(OrderDetail orderDetail)
+    {
+        throw new NotImplementedException();
+    }
+
+    public static Order Create(
+        Guid id,
+        Amount totalAmount,
+        User user,
+        Shipping shipping,
+        Payment payment)
+    {
+        var order = new Order(
+            id,
+            totalAmount)
+        {
+            UserId = user.Id,
+            User = user,
+            Shipping = shipping,
+            Payment = payment,
+            CreatedOnUtc = DateTime.UtcNow,
+            ModifiedOnUtc = DateTime.UtcNow
+        };
+
+        return order;
+
+    }
+
+    public void AddEstablishedRelationships(Payment payment, Shipping shipping)
+    {
+        Payment = payment;
+        Shipping = shipping;
+    }
+
+    public void ChangeStatus(bool cancel) =>
+        IsCanceled = cancel;
 }

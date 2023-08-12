@@ -7,4 +7,4 @@ using VM.Application.Abstractions.Messaging;
 
 namespace VM.Application.Segregation.Orders.Commands.Update;
 
-public sealed record UpdateOrderCommand(bool Cancel) : ICommand;
+public sealed record UpdateOrderCommand(Guid Id, bool Cancel) : ICommand;
