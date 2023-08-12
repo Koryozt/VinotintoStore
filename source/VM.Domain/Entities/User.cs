@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VM.Domain.DomainEvents;
 using VM.Domain.Primitives;
 using VM.Domain.ValueObjects.General;
 using VM.Domain.ValueObjects.Users;
@@ -54,6 +55,10 @@ public sealed class User : AggregateRoot, IAuditableEntity
             ModifiedOnUtc = DateTime.UtcNow
         };
 
+        user.RaiseDomainEvent( new UserRegisteredDomainEvent(
+            Guid.NewGuid(),
+            user.Id));
+
         return user;
     }
 
@@ -68,6 +73,14 @@ public sealed class User : AggregateRoot, IAuditableEntity
 
     public void ChangeNames(Name firstname, Name lastname)
     {
+        if (!Firstname.Equals(firstname) || 
+            !Lastname.Equals(lastname))
+        {
+            RaiseDomainEvent(new UserNameChangedDomainEvent(
+                Guid.NewGuid(),
+                Id));
+        }
+
         Firstname = firstname;
         Lastname = lastname;
     }

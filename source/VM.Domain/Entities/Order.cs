@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VM.Domain.DomainEvents;
 using VM.Domain.Primitives;
 using VM.Domain.ValueObjects.General;
 
@@ -19,7 +20,7 @@ public sealed class Order : AggregateRoot, IAuditableEntity
         Amount totalAmount) : base(id)
     {
         TotalAmount = totalAmount;
-        IsCanceled = false;
+        IsCanceled = true;
     }
 
     private Order()
@@ -64,6 +65,10 @@ public sealed class Order : AggregateRoot, IAuditableEntity
             ModifiedOnUtc = DateTime.UtcNow
         };
 
+        order.RaiseDomainEvent(new OrderMadeDomainEvent(
+            Guid.NewGuid(),
+            order.Id));
+
         return order;
 
     }
@@ -74,6 +79,15 @@ public sealed class Order : AggregateRoot, IAuditableEntity
         Shipping = shipping;
     }
 
-    public void ChangeStatus(bool cancel) =>
+    public void ChangeStatus(bool cancel)
+    {
+        if (!IsCanceled.Equals(cancel))
+        {
+            RaiseDomainEvent(new OrderStatusModifiedDomainEvent(
+                Guid.NewGuid(),
+                Id));
+        }
+
         IsCanceled = cancel;
+    }
 }

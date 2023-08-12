@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VM.Domain.DomainEvents;
 using VM.Domain.Primitives;
 using VM.Domain.Shared;
 using VM.Domain.ValueObjects.General;
@@ -59,7 +60,9 @@ public sealed class Product : AggregateRoot, IAuditableEntity
             price,
             stock);
 
-        // Create DomainEvent here.
+        product.RaiseDomainEvent(new NewProductDomainEvent(
+            Guid.NewGuid(),
+            product.Id));
 
         return product;
     }
@@ -88,7 +91,13 @@ public sealed class Product : AggregateRoot, IAuditableEntity
         Amount price,
         Quantity stock)
     {
-        // Make a domain event when updating.
+        if (!Name.Equals(name) || !Description.Equals(description) ||
+            !Price.Equals(price) || !Stock.Equals(stock))
+        {
+            RaiseDomainEvent(new ProductModifiedDomainEvent(
+                Guid.NewGuid(),
+                Id));
+        }
 
         Name = name;
         Description = description;

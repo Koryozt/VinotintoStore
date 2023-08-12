@@ -1,3 +1,5 @@
 ﻿namespace VM.Domain.DomainEvents;
 
-public sealed record UserRegisteredDomainEvent(Guid Id, Guid UserId) : DomainEvent(Id);
+public sealed record UserRegisteredDomainEvent(
+    Guid Id, 
+    Guid UserId) : DomainEvent(Id);

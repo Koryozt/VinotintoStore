@@ -6,4 +6,7 @@ using System.Threading.Tasks;
 
 namespace VM.Domain.DomainEvents;
 
-public sealed record ProductBoughtDomainEvent(Guid Id, Guid UserId) : DomainEvent(Id);
+
+public sealed record OrderStatusModifiedDomainEvent(
+    Guid Id, 
+    Guid OrderId) : DomainEvent(Id);
