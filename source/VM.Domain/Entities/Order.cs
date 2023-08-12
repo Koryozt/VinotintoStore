@@ -30,7 +30,9 @@ public sealed class Order : AggregateRoot, IAuditableEntity
     public bool IsCanceled { get; set; }
     public Guid UserId { get; set; }
     public User User { get; set; }
+    public Guid ShippingId { get; set; }
     public Shipping Shipping { get; set; }
+    public Guid PaymentId { get; set; }
     public Payment Payment { get; set; }
     public IReadOnlyCollection<OrderDetail> OrderDetails => _orderDetails;
     public DateTime CreatedOnUtc { get; set; }
@@ -54,7 +56,9 @@ public sealed class Order : AggregateRoot, IAuditableEntity
         {
             UserId = user.Id,
             User = user,
+            ShippingId = shipping.Id,
             Shipping = shipping,
+            PaymentId = payment.Id,
             Payment = payment,
             CreatedOnUtc = DateTime.UtcNow,
             ModifiedOnUtc = DateTime.UtcNow

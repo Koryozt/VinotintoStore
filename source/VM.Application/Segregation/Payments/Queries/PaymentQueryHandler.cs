@@ -15,10 +15,14 @@ internal sealed class PaymentQueryHandler :
     IQueryHandler<GetPaymentByIdQuery, PaymentResponse>
 {
     private readonly IPaymentRepository _paymentRepository;
+    private readonly IOrderRepository _orderRepository;
 
-    public PaymentQueryHandler(IPaymentRepository paymentRepository)
+    public PaymentQueryHandler(
+        IPaymentRepository paymentRepository,
+        IOrderRepository orderRepository)
     {
         _paymentRepository = paymentRepository;
+        _orderRepository = orderRepository;
     }
 
     public async Task<Result<PaymentResponse>> Handle(
@@ -35,14 +39,18 @@ internal sealed class PaymentQueryHandler :
                 DomainErrors.Payment.NotFound(request.Id));
         }
 
+        Order? order = await _orderRepository.GetByIdAsync(
+            payment.OrderId,
+            cancellationToken);
+
         var response = new PaymentResponse(
             payment.Id,
             payment.Method.Value,
             payment.Amount.Value,
 
             new PaymentOrderResponse(
-                payment.OrderId,
-                payment.Order.TotalAmount.Value));
+                order.Id,
+                order.TotalAmount.Value));
 
         return response;
     }

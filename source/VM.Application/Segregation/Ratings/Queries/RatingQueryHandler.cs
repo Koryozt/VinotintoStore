@@ -41,11 +41,15 @@ internal sealed class RatingQueryHandler :
                 DomainErrors.Rating.NotFound(request.Id));
         }
 
+        Product? product = await _productRepository.GetByIdAsync(
+            rating.ProductId,
+            cancellationToken);
+
         var response = new RatingResponse(
             rating.Id,
             rating.Score,
             rating.Comment.Value,
-            rating.Product.Name.Value);
+            product.Name.Value);
 
         return response;
     }
@@ -65,13 +69,19 @@ internal sealed class RatingQueryHandler :
                     request.ProductId));
         }
 
-        IEnumerable<RatingResponse> responses = product.Ratings
-            .Select(rating => new RatingResponse(
+        List<RatingResponse> responses = new();
+
+        foreach(Rating rating in product.Ratings)
+        {
+            var response = new RatingResponse(
                 rating.Id,
                 rating.Score,
                 rating.Comment.Value,
-                rating.Product.Name.Value));
+                product.Name.Value);
 
-        return Result.Success(responses);
+            responses.Add(response);
+        }
+
+        return Result.Success(responses.AsEnumerable());
     }
 }

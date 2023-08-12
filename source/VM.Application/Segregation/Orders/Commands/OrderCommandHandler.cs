@@ -75,9 +75,9 @@ internal sealed class OrderCommandHandler :
         var order = Order.Create(
             Guid.NewGuid(),
             totalAmount.Value,
-             user,
-             shipping,
-             payment);
+            user,
+            shipping,
+            payment);
 
         payment.SetOrder(order);
         shipping.SetOrder(order);

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using VM.Application.Abstractions.Messaging;
 using VM.Application.Segregation.Categories.Queries.Statements;
 using VM.Domain.Abstractions;
+using VM.Domain.Entities;
 using VM.Domain.Errors;
 using VM.Domain.Shared;
 using VM.Domain.ValueObjects.General;
@@ -32,7 +33,7 @@ internal sealed class CategoryQueryHandler :
         GetCategoryByIdQuery request,
         CancellationToken cancellationToken)
     {
-        var category = await _categoryRepository.GetByIdAsync(
+        Category? category = await _categoryRepository.GetByIdAsync(
             request.Id, 
             cancellationToken);
 
@@ -114,10 +115,10 @@ internal sealed class CategoryQueryHandler :
 
         IEnumerable<CategoryResponse> response = product.Categories
             .Select(
-                x => new CategoryResponse(
-                x.Id,
-                x.Name.Value,
-                x.Products
+                cat => new CategoryResponse(
+                cat.Id,
+                cat.Name.Value,
+                cat.Products
                 .Select(prod =>
                     new ProductCategoryResponse(
                         prod.Id,

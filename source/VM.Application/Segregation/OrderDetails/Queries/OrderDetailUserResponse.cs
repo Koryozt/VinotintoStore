@@ -7,6 +7,4 @@ using System.Threading.Tasks;
 namespace VM.Application.Segregation.OrderDetails.Queries;
 
 public sealed record OrderDetailUserResponse(
-    Guid Id,
-    string FirstName,
-    string LastName);
+    Guid Id);

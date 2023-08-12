@@ -18,13 +18,19 @@ internal sealed class OrderQueryHandler :
 {
     private readonly IOrderRepository _orderRepository;
     private readonly IUserRepository _userRepository;
+    private readonly IShippingRepository _shippingRepository;
+    private readonly IPaymentRepository _paymentRepository;
 
     public OrderQueryHandler(
         IOrderRepository orderRepository,
-        IUserRepository userRepository)
+        IUserRepository userRepository,
+        IShippingRepository shippingrepository,
+        IPaymentRepository paymentRepository)
     {
         _orderRepository = orderRepository;
         _userRepository = userRepository;
+        _shippingRepository = shippingrepository;
+        _paymentRepository = paymentRepository;
     }
 
     public async Task<Result<OrderResponse>> Handle(
@@ -40,24 +46,38 @@ internal sealed class OrderQueryHandler :
                 DomainErrors.Order.NotFound(request.Id));
         }
 
+        Shipping? shipping = await _shippingRepository
+            .GetByIdAsync(
+                order.ShippingId,
+                cancellationToken);
+
+        Payment? payment = await _paymentRepository
+            .GetByIdAsync(
+                order.PaymentId,
+                cancellationToken);
+
+        User? user = await _userRepository.GetByIdAsync(
+            order.UserId,
+            cancellationToken);
+
         var response = new OrderResponse(
             order.Id,
             order.TotalAmount.Value,
 
             new OrderUserResponse(
-                order.UserId,
-                $"{order.User.Firstname}" + 
-                $"{order.User.Lastname}"),
+                user.Id,
+                $"{user.Firstname}" + 
+                $"{user.Lastname}"),
             
             new OrderShippingResponse(
-                order.Shipping.Id,
-                order.Shipping.Address.Value,
-                order.Shipping.Cost.Value),
+                shipping.Id,
+                shipping.Address.Value,
+                shipping.Cost.Value),
             
             new OrderPaymentResponse(
-                order.Payment.Id,
-                order.Payment.Method.Value,
-                order.Payment.Amount.Value));
+                payment.Id,
+                payment.Method.Value,
+                payment.Amount.Value));
 
         return response;
     }
@@ -86,27 +106,42 @@ internal sealed class OrderQueryHandler :
             return Array.Empty<OrderResponse>();
         }
 
-        IEnumerable<OrderResponse> responses = 
-            orders
-        .Select(order => new OrderResponse(
+        List<OrderResponse> responses = new();
+
+        foreach(Order order in orders)
+        {
+            Shipping? shipping = await _shippingRepository
+                .GetByIdAsync(
+                    order.ShippingId,
+                    cancellationToken);
+
+            Payment? payment = await _paymentRepository
+                .GetByIdAsync(
+                    order.PaymentId,
+                    cancellationToken);
+
+            var response = new OrderResponse(
                 order.Id,
                 order.TotalAmount.Value,
 
                 new OrderUserResponse(
-                    order.UserId,
-                    $"{order.User.Firstname}" + 
-                    $"{order.User.Lastname}"),
+                    user.Id,
+                    $"{user.Firstname}" +
+                    $"{user.Lastname}"),
 
                 new OrderShippingResponse(
-                    order.Shipping.Id,
-                    order.Shipping.Address.Value,
-                    order.Shipping.Cost.Value),
+                    shipping.Id,
+                    shipping.Address.Value,
+                    shipping.Cost.Value),
 
                 new OrderPaymentResponse(
-                    order.Payment.Id,
-                    order.Payment.Method.Value,
-                    order.Payment.Amount.Value)));
+                    payment.Id,
+                    payment.Method.Value,
+                    payment.Amount.Value));
 
-        return Result.Success(responses);
+            responses.Add(response);
+        }
+
+        return Result.Success(responses.AsEnumerable());
     }
 }

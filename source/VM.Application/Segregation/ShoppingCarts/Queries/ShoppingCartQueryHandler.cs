@@ -19,11 +19,17 @@ internal sealed class ShoppingCartQueryHandler :
     IQueryHandler<GetShoppingCartByUserQuery, ShoppingCartResponse>
 {
     private readonly IShoppingCartRepository _shoppingCartRepository;
+    private readonly IUserRepository _userRepository;
+    private readonly IProductRepository _productRepository;
 
     public ShoppingCartQueryHandler(
-        IShoppingCartRepository shoppingCartRepository)
+        IShoppingCartRepository shoppingCartRepository,
+        IUserRepository userRepository,
+        IProductRepository productRepository)
     {
         _shoppingCartRepository = shoppingCartRepository;
+        _userRepository = userRepository;
+        _productRepository = productRepository;
     }
 
     public async Task<Result<ShoppingCartResponse>> Handle(
@@ -39,26 +45,41 @@ internal sealed class ShoppingCartQueryHandler :
                 DomainErrors.ShoppingCart.NotFound(request.Id));
         }
 
+        List<ShoppingCartItemResponse> itemsResponse = new();
+
+        foreach(CartItem item in shoppingCart.CartItems)
+        {
+            Product? itemProduct = await _productRepository
+                .GetByIdAsync(
+                    item.ProductId,
+                    cancellationToken);
+
+            var cartItem = new ShoppingCartItemResponse(
+                item.Id,
+                item.Quantity.Value,
+                item.TotalPrice.Value,
+                new CartItemProductResponse(
+                    itemProduct.Id,
+                    itemProduct.Name.Value,
+                    itemProduct.Description.Value,
+                    itemProduct.Price.Value,
+                    itemProduct.Stock.Value));
+
+            itemsResponse.Add(cartItem);
+        }
+
+        User? user = await _userRepository.GetByIdAsync(
+            shoppingCart.UserId,
+            cancellationToken);
+
         ShoppingCartResponse response = new(
             shoppingCart.Id,
-            
             new ShoppingCartUserResponse(
-                shoppingCart.UserId,
-                shoppingCart.User.Firstname.Value,
-                shoppingCart.User.Lastname.Value
+                user.Id,
+                user.Firstname.Value,
+                user.Lastname.Value
                 ),
-            
-            shoppingCart.CartItems.Select(
-                item => new ShoppingCartItemResponse(
-                    item.Id,
-                    item.Quantity.Value,
-                    item.TotalPrice.Value,
-                    new CartItemProductResponse(
-                        item.ProductId,
-                        item.Product.Name.Value,
-                        item.Product.Description.Value,
-                        item.Product.Price.Value,
-                        item.Product.Stock.Value))));
+            itemsResponse);
 
         return response;
     }
@@ -80,26 +101,41 @@ internal sealed class ShoppingCartQueryHandler :
                     request.UserId));
         }
 
+        List<ShoppingCartItemResponse> itemsResponse = new();
+
+        foreach (CartItem item in shoppingCart.CartItems)
+        {
+            Product? itemProduct = await _productRepository
+                .GetByIdAsync(
+                    item.ProductId,
+                    cancellationToken);
+
+            var cartItem = new ShoppingCartItemResponse(
+                item.Id,
+                item.Quantity.Value,
+                item.TotalPrice.Value,
+                new CartItemProductResponse(
+                    itemProduct.Id,
+                    itemProduct.Name.Value,
+                    itemProduct.Description.Value,
+                    itemProduct.Price.Value,
+                    itemProduct.Stock.Value));
+
+            itemsResponse.Add(cartItem);
+        }
+
+        User? user = await _userRepository.GetByIdAsync(
+            shoppingCart.UserId,
+            cancellationToken);
+
         ShoppingCartResponse response = new(
             shoppingCart.Id,
-
             new ShoppingCartUserResponse(
-                shoppingCart.UserId,
-                shoppingCart.User.Firstname.Value,
-                shoppingCart.User.Lastname.Value
+                user.Id,
+                user.Firstname.Value,
+                user.Lastname.Value
                 ),
-
-            shoppingCart.CartItems.Select(
-                item => new ShoppingCartItemResponse(
-                    item.Id,
-                    item.Quantity.Value,
-                    item.TotalPrice.Value,
-                    new CartItemProductResponse(
-                        item.ProductId,
-                        item.Product.Name.Value,
-                        item.Product.Description.Value,
-                        item.Product.Price.Value,
-                        item.Product.Stock.Value))));
+            itemsResponse);
 
         return response;
     }

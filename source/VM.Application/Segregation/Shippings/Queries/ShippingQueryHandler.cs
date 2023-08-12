@@ -63,10 +63,15 @@ internal sealed class ShippingQueryHandler :
                 DomainErrors.Shipping.OrderNotFound(request.OrderId));
         }
 
+        Shipping? shipping = await _shippingRepository
+            .GetByIdAsync(
+                order.ShippingId,
+                cancellationToken);
+
         ShippingResponse response = new(
-            order.Shipping.Id,
-            order.Shipping.Address.Value,
-            order.Shipping.Cost.Value,
+            shipping.Id,
+            shipping.Address.Value,
+            shipping.Cost.Value,
             order.Id);
 
         return response;

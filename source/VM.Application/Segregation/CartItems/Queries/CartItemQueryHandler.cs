@@ -1,6 +1,7 @@
 ﻿using VM.Application.Abstractions.Messaging;
 using VM.Application.Segregation.CartItems.Queries.Statements;
 using VM.Domain.Abstractions;
+using VM.Domain.Entities;
 using VM.Domain.Errors;
 using VM.Domain.Shared;
 
@@ -12,17 +13,21 @@ internal sealed class CartItemQueryHandler :
     IQueryHandler<GetCartItemsByShopingCartQuery, IEnumerable<CartItemResponse>>
 {
     private readonly ICartItemRepository _cartItemRepository;
+    private readonly IProductRepository _productRepository;
 
-    public CartItemQueryHandler(ICartItemRepository cartItemRepository)
+    public CartItemQueryHandler(
+        ICartItemRepository cartItemRepository,
+        IProductRepository productRepository)
     {
         _cartItemRepository = cartItemRepository;
+        _productRepository = productRepository;
     }
 
     public async Task<Result<CartItemResponse>> Handle(
         GetCartItemByIdQuery request,
         CancellationToken cancellationToken)
     {
-        var item = await _cartItemRepository.GetByIdAsync(
+        CartItem? item = await _cartItemRepository.GetByIdAsync(
             request.Id,
             cancellationToken);
 
@@ -32,18 +37,22 @@ internal sealed class CartItemQueryHandler :
                 DomainErrors.CartItem.NotFound(request.Id));
         }
 
+        Product? product = await _productRepository.GetByIdAsync(
+            item.ProductId,
+            cancellationToken);
+
         CartItemResponse response = new(
             item.Id,
             item.Quantity.Value,
             item.TotalPrice.Value,
             new CartItemProductResponse(
-                item.ProductId,
-                item.Product.Name.Value,
-                item.Product.Description.Value,
-                item.Product.Price.Value,
-                item.Product.Stock.Value),
+                product.Id,
+                product.Name.Value,
+                product.Description.Value,
+                product.Price.Value,
+                product.Stock.Value),
             new CartItemShoppingCartResponse(
-            item.ShoppingCartId)
+                item.ShoppingCartId)
             );
 
         return response;
@@ -63,18 +72,22 @@ internal sealed class CartItemQueryHandler :
                 DomainErrors.CartItem.ProductNotFound(request.ProductId));
         }
 
+        Product? product = await _productRepository.GetByIdAsync(
+            item.ProductId,
+            cancellationToken);
+
         CartItemResponse response = new(
             item.Id,
             item.Quantity.Value,
             item.TotalPrice.Value,
             new CartItemProductResponse(
-                item.ProductId,
-                item.Product.Name.Value,
-                item.Product.Description.Value,
-                item.Product.Price.Value,
-                item.Product.Stock.Value),
+                product.Id,
+                product.Name.Value,
+                product.Description.Value,
+                product.Price.Value,
+                product.Stock.Value),
             new CartItemShoppingCartResponse(
-            item.ShoppingCartId)
+                item.ShoppingCartId)
             );
 
         return response;
@@ -94,23 +107,31 @@ internal sealed class CartItemQueryHandler :
                 DomainErrors.CartItem.ShoppingCartNotFound(request.ShopingCartId));
         }
 
-        IEnumerable<CartItemResponse> response =
-            items
-                .Select(item =>
-                    new CartItemResponse(
-                        item.Id,
-                        item.Quantity.Value,
-                        item.TotalPrice.Value,
-                        new CartItemProductResponse(
-                            item.ProductId,
-                            item.Product.Name.Value,
-                            item.Product.Description.Value,
-                            item.Product.Price.Value,
-                            item.Product.Stock.Value),
-                        new CartItemShoppingCartResponse(
-                        item.ShoppingCartId)
-                 ));
+        List<CartItemResponse> responses = new();
 
-        return Result.Success(response);
+        foreach(CartItem item in items)
+        {
+            Product? product = await _productRepository.GetByIdAsync(
+                item.ProductId,
+                cancellationToken);
+
+            CartItemResponse response = new(
+                item.Id,
+                item.Quantity.Value,
+                item.TotalPrice.Value,
+                new CartItemProductResponse(
+                    product.Id,
+                    product.Name.Value,
+                    product.Description.Value,
+                    product.Price.Value,
+                    product.Stock.Value),
+                new CartItemShoppingCartResponse(
+                    item.ShoppingCartId)
+                );
+
+            responses.Add(response);
+        }
+
+        return Result.Success(responses.AsEnumerable());
     }
 }

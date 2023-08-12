@@ -9,6 +9,6 @@ namespace VM.Application.Segregation.OrderDetails.Queries;
 
 public sealed record OrderDetailProductResponse(
     Guid Id,
-    Name Name,
-    Amount Price,
-    Quantity Stock);
+    string Name,
+    double Price,
+    int Stock);

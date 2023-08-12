@@ -10,5 +10,5 @@ namespace VM.Application.Segregation.OrderDetails.Queries;
 
 public sealed record OrderDetailOrderResponse(
     Guid Id,
-    Amount TotalAmount,
+    double TotalAmount,
     OrderDetailUserResponse User);
