@@ -36,6 +36,7 @@ public sealed class User : AggregateRoot, IAuditableEntity
     public Guid ShoppingCartId { get; set; }
     public ShoppingCart ShoppingCart { get; set; }
     public IReadOnlyCollection<Order> Orders => _orders;
+    public ICollection<Role> Roles { get; set; }
 
     public static User Create(
         Guid id,
@@ -64,7 +65,6 @@ public sealed class User : AggregateRoot, IAuditableEntity
 
     public void AddShoppingCart(ShoppingCart cart)
     {
-        ShoppingCart = cart;
         ShoppingCartId = cart.Id;
     }
 

@@ -37,4 +37,5 @@ public static class TableNames
     public const string Role = "Role";
 
     public const string RolePermission = "RolePermission";
+    public const string Permissions = "Permissions";
 }

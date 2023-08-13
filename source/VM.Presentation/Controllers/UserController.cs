@@ -10,7 +10,9 @@ using VM.Application.Segregation.Users.Commands.Create;
 using VM.Application.Segregation.Users.Commands.Login;
 using VM.Application.Segregation.Users.Queries;
 using VM.Application.Segregation.Users.Queries.Statements;
+using VM.Domain.Enums;
 using VM.Domain.Shared;
+using VM.Infrastructure.Authentication;
 using VM.Presentation.Abstractions;
 using VM.Presentation.Contracts.SignIn;
 
@@ -23,7 +25,7 @@ public sealed class UserController : ApiController
     {
     }
 
-    [Authorize]
+    [HasPermission(Permission.ReadUser)]
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetUserById(
         Guid id,

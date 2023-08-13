@@ -42,19 +42,14 @@ internal sealed class UserQueryHandler :
                 request.Id));
         }
 
-        ShoppingCart? shoppingCart = await _shoppingCartRepository
-            .GetByIdAsync(
-                user.ShoppingCartId, 
-                cancellationToken);
-
         UserResponse response = new(
             user.Id,
             user.Firstname.Value,
             user.Lastname.Value,
             
             new UserShoppingCartResponse(
-                shoppingCart.Id,
-                shoppingCart.CartItems
+                user.ShoppingCart.Id,
+                user.ShoppingCart.CartItems
                     .Select(item => new ShoppingCartItemResponse(
                         item.Id,
                         item.Quantity.Value,

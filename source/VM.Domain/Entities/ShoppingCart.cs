@@ -13,8 +13,9 @@ public sealed class ShoppingCart : AggregateRoot, IAuditableEntity
 {
     private readonly List<CartItem> _cartItems = new();
 
-    private ShoppingCart(Guid id) : base(id)
+    private ShoppingCart(Guid id, Guid userId) : base(id)
     {
+        UserId = userId;
     }
 
     public Guid UserId { get; set; }
@@ -27,10 +28,8 @@ public sealed class ShoppingCart : AggregateRoot, IAuditableEntity
         Guid id,
         User user)
     {
-        var shoppingCart = new ShoppingCart(id)
+        var shoppingCart = new ShoppingCart(id, user.Id)
         {
-            UserId = user.Id,
-            User = user,
             CreatedOnUtc = DateTime.UtcNow,
             ModifiedOnUtc = DateTime.UtcNow
         };

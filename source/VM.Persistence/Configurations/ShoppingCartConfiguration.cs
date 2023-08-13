@@ -20,6 +20,11 @@ internal sealed class ShoppingCartConfiguration : IEntityTypeConfiguration<Shopp
         builder.HasKey(sc => sc.Id);
 
         builder
+            .HasOne(s => s.User)
+            .WithOne(u => u.ShoppingCart)
+            .HasForeignKey<ShoppingCart>(s => s.UserId);
+
+        builder
             .HasMany(s => s.CartItems)
             .WithOne(ci => ci.ShoppingCart)
             .HasForeignKey(ci => ci.ShoppingCartId);
