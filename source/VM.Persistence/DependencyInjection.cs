@@ -37,9 +37,12 @@ public static class DependencyInjection
         services.AddSingleton<UpdateAuditableEntitiesInterceptor>();
 
         services.AddDbContext<ApplicationDbContext>(
-            (sp, options) =>
+            (sp, optionsBuilder) =>
             {
-                options.UseSqlServer(Database);
+                var interceptor = sp.GetService<ConvertDomainEventsToOutboxMessagesInterceptor>();
+
+                optionsBuilder.UseSqlServer(Database)
+                    .AddInterceptors(interceptor);
             });
 
         return services;

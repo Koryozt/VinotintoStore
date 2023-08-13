@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VM.Application.Segregation.Users.Commands.Create;
 using VM.Application.Segregation.Users.Commands.Login;
@@ -22,6 +23,7 @@ public sealed class UserController : ApiController
     {
     }
 
+    [Authorize]
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetUserById(
         Guid id,

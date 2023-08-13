@@ -179,7 +179,8 @@ public static class DomainErrors
             (email, password) =>
             new Error(
                 "User.InvalidCredentials", 
-                $"The email {email} or the password {password} are invalid");
+                $"The email {email} or the password {password} are invalid"
+                + " or incorrect");
 
         public static Func<string, Error> EmailAlreadyInUse = email =>
             new Error(

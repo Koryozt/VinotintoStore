@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VM.Application.Abstractions;
 using VM.Application.Abstractions.Messaging;
 using VM.Application.Segregation.Users.Commands.Create;
 using VM.Application.Segregation.Users.Commands.Login;
@@ -16,6 +17,10 @@ using VM.Domain.ValueObjects.Users;
 
 namespace VM.Application.Segregation.Users.Commands;
 
+// In a real world case, I would hash the password for
+// register and login, however, since this is a personal project
+// I won't do it, but it's the recommended for real case scenarios.
+
 internal sealed class UserCommandHandler :
     ICommandHandler<CreateUserCommand, Guid>,
     ICommandHandler<LoginCommand, string>,
@@ -24,15 +29,18 @@ internal sealed class UserCommandHandler :
     private readonly IUserRepository _userRepository;
     private readonly IShoppingCartRepository _shoppingCartRepository;
     private readonly IUnitOfWork _uow;
+    private readonly IJwtProvider _provider;
 
     public UserCommandHandler(
         IUserRepository userRepository,
         IShoppingCartRepository shoppingCartRepository,
-        IUnitOfWork uow)
+        IUnitOfWork uow,
+        IJwtProvider provider)
     {
         _userRepository = userRepository;
         _uow = uow;
         _shoppingCartRepository = shoppingCartRepository;
+        _provider = provider;
     }
 
     public async Task<Result<Guid>> Handle(
@@ -88,9 +96,38 @@ internal sealed class UserCommandHandler :
         return user.Id;
     }
 
-    public Task<Result<string>> Handle(LoginCommand request, CancellationToken cancellationToken)
+    public async Task<Result<string>> Handle(
+        LoginCommand request,
+        CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        Result<Email> emailResult = Email.Create(request.Email);
+        Result<Password> passwordResult = Password.Create(
+            request.Password);
+
+        if (passwordResult.IsFailure || emailResult.IsFailure)
+        {
+            return Result.Failure<string>(
+                DomainErrors.User.InvalidCredentials(
+                    request.Email,
+                    request.Password));
+        }
+
+        User? user = (await _userRepository.GetByConditionAsync(
+            us => us.Email.Equals(emailResult.Value) &&
+            us.Password.Equals(passwordResult.Value),
+            cancellationToken)).FirstOrDefault();
+
+        if (user is null)
+        {
+            return Result.Failure<string>(
+                DomainErrors.User.InvalidCredentials(
+                    request.Email,
+                    request.Password));
+        }
+
+        string token = _provider.GenerateTokenAsync(user);
+
+        return token;
     }
 
     public async Task<Result> Handle(
