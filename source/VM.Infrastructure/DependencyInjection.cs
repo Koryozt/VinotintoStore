@@ -5,9 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Quartz;
 using Scrutor;
+using VM.Infrastructure.Authentication;
 using VM.Infrastructure.BackgroundJobs;
 using VM.Infrastructure.Idempotence;
 using VM.Infrastructure.OptionsSetup;
@@ -54,6 +56,10 @@ public static class DependencyInjection
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer();
+
+        services.AddAuthorization();
+        services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
+        services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
 
         return services;
     }

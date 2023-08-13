@@ -10,5 +10,25 @@ public enum Permission
 {
     ReadUser = 1,
     UpdateUser,
-    UpdateCurrentUser
+    UpdateCurrentUser,
+    RemoveUser,
+    ReadOrder,
+    CreateOrder,
+    UpdateOrder,
+    ReadProduct,
+    AddProduct,
+    UpdateProduct,
+    RemoveProduct,
+    ReadShoppingCart,
+    UpdateShoppingCart,
+    ReadCategory,
+    AddCategory,
+    UpdateCategory,
+    ReadPayment,
+    ReadOrderDetails,
+    ReadShipping,
+    ReadRating,
+    AddRating, 
+    CreateCoupon,
+    ReadCoupon
 }
