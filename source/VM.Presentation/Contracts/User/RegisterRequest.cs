@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VM.Presentation.Contracts.SignIn;
+namespace VM.Presentation.Contracts.User;
 
 public sealed record RegisterRequest(
     string Firstname,

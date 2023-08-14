@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using MediatR;
@@ -8,13 +9,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VM.Application.Segregation.Users.Commands.Create;
 using VM.Application.Segregation.Users.Commands.Login;
+using VM.Application.Segregation.Users.Commands.Update;
 using VM.Application.Segregation.Users.Queries;
 using VM.Application.Segregation.Users.Queries.Statements;
 using VM.Domain.Enums;
 using VM.Domain.Shared;
 using VM.Infrastructure.Authentication;
 using VM.Presentation.Abstractions;
-using VM.Presentation.Contracts.SignIn;
+using VM.Presentation.Contracts.User;
 
 namespace VM.Presentation.Controllers;
 
@@ -23,6 +25,27 @@ public sealed class UserController : ApiController
 {
     public UserController(ISender sender) : base(sender)
     {
+    }
+
+    [HasPermission(Permission.ReadUser)]
+    [HttpGet("me")]
+    public async Task<IActionResult> MyProfile(
+    CancellationToken cancellationToken)
+    {
+        string? userId = HttpContext.User.Claims.FirstOrDefault(
+            x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+
+        if (!Guid.TryParse(userId, out Guid parsedUserId))
+        {
+            return Unauthorized();
+        }
+
+        var query = new GetUserByIdQuery(parsedUserId);
+
+        Result<UserResponse> result = await
+            Sender.Send(query, cancellationToken);
+
+        return result.IsFailure ? NotFound(result.Error) : Ok(result.Value);
     }
 
     [HasPermission(Permission.ReadUser)]
@@ -82,5 +105,39 @@ public sealed class UserController : ApiController
             nameof(GetUserById),
             new { id = result.Value },
             result.Value);
+    }
+
+    [HttpPatch("update")]
+    [HasPermission(Permission.ReadUser)]
+    [HasPermission(Permission.UpdateCurrentUser)]
+    public async Task<IActionResult> Update(
+        [FromBody] UpdateRequest request,
+        CancellationToken cancellationToken)
+    {
+        string? userId = HttpContext.User.Claims.FirstOrDefault(
+            x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+
+        if (!Guid.TryParse(userId, out Guid parsedUserId))
+        {
+            // Can implement custom exception here.
+            return Unauthorized();
+        }
+
+        var command = new UpdateUserCommand(
+            parsedUserId,
+            request.Firstname,
+            request.Lastname
+            );
+
+        Result result = await Sender.Send(
+            command, 
+            cancellationToken);
+
+        if (result.IsFailure)
+        {
+            return BadRequest(result.Error);
+        }
+
+        return NoContent();
     }
 }

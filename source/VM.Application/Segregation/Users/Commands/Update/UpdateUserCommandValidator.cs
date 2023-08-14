@@ -13,11 +13,9 @@ internal class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
     public UpdateUserCommandValidator()
     {
         RuleFor(x => x.Firstname)
-            .NotEmpty()
             .MaximumLength(Name.MaxLength);
 
         RuleFor(x => x.Lastname)
-            .NotEmpty()
             .MaximumLength(Name.MaxLength);
     }
 }

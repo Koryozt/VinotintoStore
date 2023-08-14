@@ -145,9 +145,9 @@ internal sealed class UserCommandHandler :
         }
 
         Result<Name> firstnameResult = Name.Create(
-                request.Firstname),
+                request.Firstname ?? user.Firstname.Value),
             lastnameResult = Name.Create(
-                request.Lastname);
+                request.Lastname ?? user.Lastname.Value);
 
         user.ChangeNames(
             firstnameResult.Value, 
