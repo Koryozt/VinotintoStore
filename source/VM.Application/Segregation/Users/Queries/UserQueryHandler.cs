@@ -19,13 +19,16 @@ internal sealed class UserQueryHandler :
 {
     private readonly IUserRepository _userRepository;
     private readonly IShoppingCartRepository _shoppingCartRepository;
+    private readonly IProductRepository _productRepository;
 
     public UserQueryHandler(
         IUserRepository userRepository,
-        IShoppingCartRepository shoppingCartRepository)
+        IShoppingCartRepository shoppingCartRepository,
+        IProductRepository productRepository)
     {
         _userRepository = userRepository;
         _shoppingCartRepository = shoppingCartRepository;
+        _productRepository = productRepository;
     }
 
     public async Task<Result<UserResponse>> Handle(
@@ -42,24 +45,40 @@ internal sealed class UserQueryHandler :
                 request.Id));
         }
 
-        UserResponse response = new(
-            user.Id,
-            user.Firstname.Value,
-            user.Lastname.Value,
-            
-            new UserShoppingCartResponse(
-                user.ShoppingCart.Id,
-                user.ShoppingCart.CartItems
-                    .Select(item => new ShoppingCartItemResponse(
+        ShoppingCart? cart = await _shoppingCartRepository.GetByIdAsync(
+            user.ShoppingCartId,
+            cancellationToken);
+
+        List<ShoppingCartItemResponse> parsedCartItemResponse = new();
+
+        foreach(CartItem item in cart.CartItems)
+        {
+            Product? product = await _productRepository.GetByIdAsync(
+                item.ProductId,
+                cancellationToken);
+
+            var shoppingCartItem = new ShoppingCartItemResponse(
                         item.Id,
                         item.Quantity.Value,
                         item.TotalPrice.Value,
                         new CartItemProductResponse(
-                            item.ProductId,
-                            item.Product.Name.Value,
-                            item.Product.Description.Value,
-                            item.Product.Price.Value,
-                            item.Product.Stock.Value)))));
+                            product.Id,
+                            product.Name.Value,
+                            product.Description.Value,
+                            product.Price.Value,
+                            product.Stock.Value));
+
+            parsedCartItemResponse.Add(shoppingCartItem);
+        }
+
+        UserResponse response = new(
+            user.Id,
+            user.Firstname.Value,
+            user.Lastname.Value,
+
+            new UserShoppingCartResponse(
+                cart.Id,
+                parsedCartItemResponse));
 
         return response;
     }
