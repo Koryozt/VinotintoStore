@@ -7,5 +7,4 @@ using System.Threading.Tasks;
 namespace VM.Presentation.Contracts.Category;
 
 public sealed record UpdateCategoryRequest(
-    Guid Id,
     string Name);

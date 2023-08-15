@@ -39,10 +39,8 @@ public sealed class Order : AggregateRoot, IAuditableEntity
     public DateTime CreatedOnUtc { get; set; }
     public DateTime? ModifiedOnUtc { get; set; }
 
-    public void AddOrderDetail(OrderDetail orderDetail)
-    {
-        throw new NotImplementedException();
-    }
+    public void AddOrderDetail(OrderDetail orderDetail) =>
+        _orderDetails.Add(orderDetail);
 
     public static Order Create(
         Guid id,

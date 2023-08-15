@@ -54,8 +54,8 @@ internal sealed class OrderDetailsQueryHandler :
 
         OrderDetailResponse response = new(
             orderDetail.Id,
-            orderDetail.Quantity,
-            orderDetail.Price,
+            orderDetail.Quantity.Value,
+            orderDetail.Price.Value,
             new OrderDetailProductResponse(
                 product.Id,
                 product.Name.Value,
@@ -99,8 +99,8 @@ internal sealed class OrderDetailsQueryHandler :
 
             OrderDetailResponse response = new(
                 orderDetail.Id,
-                orderDetail.Quantity,
-                orderDetail.Price,
+                orderDetail.Quantity.Value,
+                orderDetail.Price.Value,
                 new OrderDetailProductResponse(
                     product.Id,
                     product.Name.Value,

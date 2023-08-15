@@ -23,7 +23,7 @@ public sealed class CategoryController : ApiController
     {
     }
 
-    [HttpPost("add_product")]
+    [HttpPost("add")]
     [HasPermission(Permission.UpdateCategory)]
     [HasPermission(Permission.UpdateProduct)]
     public async Task<IActionResult> AddProductToCategory(
@@ -64,14 +64,15 @@ public sealed class CategoryController : ApiController
         return Created(HttpContext.Request.Path, result.Value);
     }
 
-    [HttpPut]
+    [HttpPut("{id:guid}")]
     [HasPermission(Permission.UpdateCategory)]
     public async Task<IActionResult> UpdateCategory(
+        Guid id,
         [FromBody] UpdateCategoryRequest request,
         CancellationToken cancellationToken)
     {
         var command = new UpdateCategoryCommand(
-            request.Id,
+            id,
             request.Name);
 
         Result result = await Sender.Send(command, cancellationToken);

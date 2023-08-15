@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VM.Application.Abstractions.Messaging;
+using VM.Application.Segregation.OrderDetails.Queries;
 using VM.Application.Segregation.Orders.Queries.Statements;
 using VM.Domain.Abstractions;
 using VM.Domain.Entities;
@@ -17,20 +18,26 @@ internal sealed class OrderQueryHandler :
     IQueryHandler<GetOrdersByUserQuery, IEnumerable<OrderResponse>>
 {
     private readonly IOrderRepository _orderRepository;
+    private readonly IOrderDetailRepository _orderDetailRepository;
     private readonly IUserRepository _userRepository;
     private readonly IShippingRepository _shippingRepository;
     private readonly IPaymentRepository _paymentRepository;
+    private readonly IProductRepository _productRepository;
 
     public OrderQueryHandler(
         IOrderRepository orderRepository,
         IUserRepository userRepository,
         IShippingRepository shippingrepository,
-        IPaymentRepository paymentRepository)
+        IPaymentRepository paymentRepository,
+        IOrderDetailRepository orderDetailRepository,
+        IProductRepository productRepository)
     {
         _orderRepository = orderRepository;
         _userRepository = userRepository;
         _shippingRepository = shippingrepository;
         _paymentRepository = paymentRepository;
+        _orderDetailRepository = orderDetailRepository;
+        _productRepository = productRepository;
     }
 
     public async Task<Result<OrderResponse>> Handle(
@@ -60,14 +67,41 @@ internal sealed class OrderQueryHandler :
             order.UserId,
             cancellationToken);
 
+        IEnumerable<OrderDetail> orderDetails = await _orderDetailRepository
+            .GetByConditionAsync(
+                d => d.OrderId == order.Id,
+                cancellationToken);
+
+        List<OrderDetailsResponse> orderDetailsResponse = new();
+
+        foreach (OrderDetail detail in orderDetails)
+        {
+            Product? product = await _productRepository.GetByIdAsync(
+                detail.ProductId,
+                cancellationToken);
+
+            var detailResponse = new OrderDetailsResponse(
+                detail.Id,
+                detail.Quantity.Value,
+                detail.Price.Value,
+            new OrderDetailProductResponse(
+                product.Id,
+                product.Name.Value,
+                product.Price.Value,
+                product.Stock.Value)
+            );
+
+            orderDetailsResponse.Add(detailResponse); 
+        }
+
         var response = new OrderResponse(
             order.Id,
             order.TotalAmount.Value,
 
             new OrderUserResponse(
                 user.Id,
-                $"{user.Firstname}" + 
-                $"{user.Lastname}"),
+                $"{user.Firstname.Value} " + 
+                $"{user.Lastname.Value}"),
             
             new OrderShippingResponse(
                 shipping.Id,
@@ -77,7 +111,9 @@ internal sealed class OrderQueryHandler :
             new OrderPaymentResponse(
                 payment.Id,
                 payment.Method.Value,
-                payment.Amount.Value));
+                payment.Amount.Value),
+            orderDetailsResponse
+            );
 
         return response;
     }
@@ -120,14 +156,41 @@ internal sealed class OrderQueryHandler :
                     order.PaymentId,
                     cancellationToken);
 
+            IEnumerable<OrderDetail> orderDetails = await _orderDetailRepository
+            .GetByConditionAsync(
+                d => d.OrderId == order.Id,
+                cancellationToken);
+
+            List<OrderDetailsResponse> orderDetailsResponse = new();
+
+            foreach (OrderDetail detail in orderDetails)
+            {
+                Product? product = await _productRepository.GetByIdAsync(
+                    detail.ProductId,
+                    cancellationToken);
+
+                var detailResponse = new OrderDetailsResponse(
+                    detail.Id,
+                    detail.Quantity.Value,
+                    detail.Price.Value,
+                new OrderDetailProductResponse(
+                    product.Id,
+                    product.Name.Value,
+                    product.Price.Value,
+                    product.Stock.Value)
+                );
+
+                orderDetailsResponse.Add(detailResponse);
+            }
+
             var response = new OrderResponse(
                 order.Id,
                 order.TotalAmount.Value,
 
                 new OrderUserResponse(
                     user.Id,
-                    $"{user.Firstname}" +
-                    $"{user.Lastname}"),
+                    $"{user.Firstname.Value} " +
+                    $"{user.Lastname.Value}"),
 
                 new OrderShippingResponse(
                     shipping.Id,
@@ -137,7 +200,9 @@ internal sealed class OrderQueryHandler :
                 new OrderPaymentResponse(
                     payment.Id,
                     payment.Method.Value,
-                    payment.Amount.Value));
+                    payment.Amount.Value),
+                orderDetailsResponse
+                );
 
             responses.Add(response);
         }

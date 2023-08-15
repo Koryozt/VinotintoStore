@@ -27,8 +27,5 @@ internal class CreateOrderCommandValidator : AbstractValidator<CreateOrderComman
 
         RuleFor(x => x.UserId)
             .NotEmpty();
-
-        RuleFor(x => x.ProductId)
-            .NotEmpty();
     }
 }

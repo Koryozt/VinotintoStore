@@ -13,4 +13,5 @@ public sealed record OrderResponse(
     double TotalAmount,
     OrderUserResponse User,
     OrderShippingResponse Shipping,
-    OrderPaymentResponse Payment);
+    OrderPaymentResponse Payment,
+    IEnumerable<OrderDetailsResponse> OrderDetails);
