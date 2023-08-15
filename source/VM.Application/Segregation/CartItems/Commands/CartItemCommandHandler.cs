@@ -70,6 +70,8 @@ internal sealed class CartItemCommandHandler :
 
         await _cartItemRepository.AddAsync(cartItem, cancellationToken);
 
+        shoppingCart.AddNewItem(cartItem);
+
         _shoppingCartRepository.Update(shoppingCart);
 
         await _uow.SaveChangesAsync(cancellationToken);

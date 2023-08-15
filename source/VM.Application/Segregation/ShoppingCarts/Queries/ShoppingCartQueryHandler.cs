@@ -21,15 +21,18 @@ internal sealed class ShoppingCartQueryHandler :
     private readonly IShoppingCartRepository _shoppingCartRepository;
     private readonly IUserRepository _userRepository;
     private readonly IProductRepository _productRepository;
+    private readonly ICartItemRepository _cartItemRepository;
 
     public ShoppingCartQueryHandler(
         IShoppingCartRepository shoppingCartRepository,
         IUserRepository userRepository,
-        IProductRepository productRepository)
+        IProductRepository productRepository,
+        ICartItemRepository cartItemRepository)
     {
         _shoppingCartRepository = shoppingCartRepository;
         _userRepository = userRepository;
         _productRepository = productRepository;
+        _cartItemRepository = cartItemRepository;
     }
 
     public async Task<Result<ShoppingCartResponse>> Handle(
@@ -44,6 +47,10 @@ internal sealed class ShoppingCartQueryHandler :
             return Result.Failure<ShoppingCartResponse>(
                 DomainErrors.ShoppingCart.NotFound(request.Id));
         }
+
+        IEnumerable<CartItem> items = await _cartItemRepository.GetByConditionAsync(
+            i => i.ShoppingCartId == shoppingCart.Id,
+            cancellationToken);
 
         List<ShoppingCartItemResponse> itemsResponse = new();
 
@@ -100,6 +107,10 @@ internal sealed class ShoppingCartQueryHandler :
                 DomainErrors.ShoppingCart.UserNotFound(
                     request.UserId));
         }
+
+        IEnumerable<CartItem> items = await _cartItemRepository.GetByConditionAsync(
+            i => i.ShoppingCartId == shoppingCart.Id,
+            cancellationToken);
 
         List<ShoppingCartItemResponse> itemsResponse = new();
 

@@ -21,4 +21,8 @@
     <ProjectReference Include="..\VM.Persistence\VM.Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Contracts\OrderDetail\" />
+  </ItemGroup>
+
 </Project>

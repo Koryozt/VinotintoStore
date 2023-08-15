@@ -84,9 +84,14 @@ internal sealed class OrderDetailsQueryHandler :
                 DomainErrors.OrderDetail.OrderNotFound(request.OrderId));
         }
 
+        IEnumerable<OrderDetail> details = await _orderDetailRepository
+            .GetByConditionAsync(
+            d => d.OrderId == order.Id,
+            cancellationToken);
+
         List<OrderDetailResponse> responses = new();
 
-        foreach(OrderDetail orderDetail in order.OrderDetails)
+        foreach(OrderDetail orderDetail in details)
         {
             Product? product = await _productRepository.GetByIdAsync(
                 orderDetail.ProductId,

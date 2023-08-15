@@ -37,5 +37,6 @@ public sealed class ShoppingCart : AggregateRoot, IAuditableEntity
         return shoppingCart;
     }
 
-    public void AddNewItem(CartItem cartItem) => _cartItems.Add(cartItem);
+    public void AddNewItem(CartItem cartItem) => 
+        _cartItems.Add(cartItem);
 }

@@ -57,6 +57,11 @@ public static class DomainErrors
                 "Coupon.ProductNotFound",
                 $"The product with the id {productId} was not found");
 
+        public static Func<Guid, Error> OrderNotFound = orderId =>
+            new Error(
+                "Coupon.OrderNotFound",
+                $"The order with the id {orderId} was not found");
+
         public static Func<double, Error> InvalidDiscount = discount =>
             new Error(
                 "Coupon.InvalidDiscount",

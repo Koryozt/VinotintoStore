@@ -9,4 +9,4 @@ using VM.Domain.ValueObjects.Coupons;
 using VM.Domain.ValueObjects.General;
 
 namespace VM.Application.Segregation.Coupons.Queries.Statements;
-public sealed record GetAmountWithCouponQuery(string Code, Guid ProductId) : IQuery<Amount>;
+public sealed record GetAmountWithCouponQuery(string Code, Guid OrderId) : IQuery<Amount>;

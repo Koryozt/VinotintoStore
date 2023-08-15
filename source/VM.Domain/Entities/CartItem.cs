@@ -42,13 +42,9 @@ public sealed class CartItem : AggregateRoot, IAuditableEntity
         {
             ProductId = cartProduct.Id,
             ShoppingCartId = shoppingCart.Id,
-            Product = cartProduct,
-            ShoppingCart = shoppingCart,
             CreatedOnUtc = DateTime.UtcNow,
             ModifiedOnUtc = DateTime.UtcNow
         };
-
-        shoppingCart.AddNewItem(cartItem);
 
         return cartItem;
     }

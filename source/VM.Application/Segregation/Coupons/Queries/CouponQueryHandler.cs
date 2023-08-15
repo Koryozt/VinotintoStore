@@ -20,13 +20,16 @@ internal sealed class CouponQueryHandler :
 {
     private readonly ICouponRepository _couponRepository;
     private readonly IProductRepository _productRepository;
+    private readonly IOrderRepository _orderRepository;
 
     public CouponQueryHandler(
         ICouponRepository couponRepository,
-        IProductRepository productRepository)
+        IProductRepository productRepository,
+        IOrderRepository orderRepository)
     {
         _couponRepository = couponRepository;
         _productRepository = productRepository;
+        _orderRepository = orderRepository;
     }
 
     public async Task<Result<CouponResponse>> Handle(
@@ -89,8 +92,8 @@ internal sealed class CouponQueryHandler :
             c => codeResult.Value == c.Code,
             cancellationToken)).FirstOrDefault();
 
-        var product = await _productRepository.GetByIdAsync(
-            request.ProductId, 
+        var order = await _orderRepository.GetByIdAsync(
+            request.OrderId, 
             cancellationToken);
 
         if (coupon is null)
@@ -99,14 +102,14 @@ internal sealed class CouponQueryHandler :
                 request.Code));
         }
 
-        if (product is null)
+        if (order is null)
         {
-            return Result.Failure<Amount>(DomainErrors.Coupon.ProductNotFound(
-                request.ProductId));
+            return Result.Failure<Amount>(DomainErrors.Coupon.OrderNotFound(
+                request.OrderId));
         }
 
-        double discount = product.Price.Value - 
-            (product.Price.Value * (coupon.Discount.Value / 100));
+        double discount = order.TotalAmount.Value - 
+            (order.TotalAmount.Value * (coupon.Discount.Value / 100));
 
         Result<Amount> discountResult = Amount.Create(discount);
 

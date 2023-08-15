@@ -32,15 +32,9 @@ public sealed class UserController : ApiController
     public async Task<IActionResult> MyProfile(
     CancellationToken cancellationToken)
     {
-        string? userId = HttpContext.User.Claims.FirstOrDefault(
-            x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+        var userId = GetLoggedUserIdentifier();
 
-        if (!Guid.TryParse(userId, out Guid parsedUserId))
-        {
-            return Unauthorized();
-        }
-
-        var query = new GetUserByIdQuery(parsedUserId);
+        var query = new GetUserByIdQuery(userId);
 
         Result<UserResponse> result = await
             Sender.Send(query, cancellationToken);
@@ -107,24 +101,17 @@ public sealed class UserController : ApiController
             result.Value);
     }
 
-    [HttpPatch("update")]
+    [HttpPatch]
     [HasPermission(Permission.ReadUser)]
     [HasPermission(Permission.UpdateCurrentUser)]
     public async Task<IActionResult> Update(
         [FromBody] UpdateRequest request,
         CancellationToken cancellationToken)
     {
-        string? userId = HttpContext.User.Claims.FirstOrDefault(
-            x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-
-        if (!Guid.TryParse(userId, out Guid parsedUserId))
-        {
-            // Can implement custom exception here.
-            return Unauthorized();
-        }
+        var userId = GetLoggedUserIdentifier();
 
         var command = new UpdateUserCommand(
-            parsedUserId,
+            userId,
             request.Firstname,
             request.Lastname
             );

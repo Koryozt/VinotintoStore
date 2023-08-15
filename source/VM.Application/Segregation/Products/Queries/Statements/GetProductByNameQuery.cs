@@ -7,4 +7,4 @@ using VM.Application.Abstractions.Messaging;
 
 namespace VM.Application.Segregation.Products.Queries.Statements;
 
-internal sealed record GetProductByNameQuery(string Name) : IQuery<ProductResponse>;
+public sealed record GetProductByNameQuery(string Name) : IQuery<ProductResponse>;

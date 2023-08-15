@@ -2,6 +2,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using VM.Domain.Entities;
+using System.Security.Claims;
 
 namespace VM.Presentation.Abstractions;
 
@@ -43,4 +45,18 @@ public abstract class ApiController : ControllerBase
             Status = status,
             Extensions = { { nameof(errors), errors } }
         };
+
+    protected Guid GetLoggedUserIdentifier()
+    {
+        string? userId = HttpContext.User.Claims.FirstOrDefault(
+            x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+
+        if (!Guid.TryParse(userId, out Guid parsedUserId))
+        {
+            // Implement custom exception.
+            return Guid.Empty;
+        }
+
+        return parsedUserId;
+    }
 }

@@ -19,5 +19,4 @@ public sealed record CreateOrderCommand(
     string Address,
     double Amount,
     double Cost,
-    Guid UserId,
-    Guid ProductId) : ICommand<Guid>;
+    Guid UserId) : ICommand<Guid>;
