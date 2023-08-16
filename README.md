@@ -22,8 +22,8 @@ The project follows the Clean Architecture for its structure, it's divided by la
 - App: The frontend application, made with React.
 
 ## Project information
-NET version: 7.0
-ASP.NET Core version: 7.0
-React version: React 18.
-Libraries used: Quartz, Scrutor, FluentValidation, EntityFrameworkCore, Serilog (for logging).
+NET version: 7.0 <br>
+ASP.NET Core version: 7.0 <br>
+React version: React 18. <br>
+Libraries used: Quartz, Scrutor, FluentValidation, EntityFrameworkCore, Serilog (for logging). <br>
 Database: MS SQL Server.
