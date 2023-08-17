@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VM.Application.Segregation.OrderDetails.Commands.AddDetail;
 using VM.Application.Segregation.OrderDetails.Queries;
@@ -23,6 +24,19 @@ public sealed class OrderDetailController : ApiController
     {
     }
 
+    /// <summary>
+    /// Gets the order detail that matches with the provided ID.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>An IActionResult containing a not null OrderDetailResponse object.</returns>
+    /// <remarks>
+    /// Method: GET, endpoint: api/order/details/{id}
+    /// </remarks>
+    /// <response code="200">Successful.</response>
+    /// <response code="400">If there's a problem getting the order detail.</response>
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(OrderDetailResponse))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
     [HttpGet("{id:guid}")]
     [HasPermission(Permission.ReadOrderDetails)]
     public async Task<IActionResult> GetOrderDetailById(
@@ -36,6 +50,19 @@ public sealed class OrderDetailController : ApiController
         return result.IsFailure ? BadRequest(result.Error) : Ok(result.Value);
     }
 
+    /// <summary>
+    /// Gets the order details that matches with the provided OrderID.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>An IActionResult containing a not null collection of OrderDetailResponse objects.</returns>
+    /// <remarks>
+    /// Method: GET, endpoint: api/order/details/o/{id}
+    /// </remarks>
+    /// <response code="200">Successful.</response>
+    /// <response code="400">If there's a problem getting the order detail.</response>
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<OrderDetailResponse>))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
     [HttpGet("o/{id:guid}")]
     [HasPermission(Permission.ReadOrder)]
     [HasPermission(Permission.ReadOrderDetails)]
@@ -51,6 +78,19 @@ public sealed class OrderDetailController : ApiController
         return result.IsFailure ? BadRequest(result.Error) : Ok(result.Value);
     }
 
+    /// <summary>
+    /// Gets the order details that matches with the provided OrderID.
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>An IActionResult containing the ID of the created entity.</returns>
+    /// <remarks>
+    /// Method: POST, endpoint: api/order/details/
+    /// </remarks>
+    /// <response code="201">Successful.</response>
+    /// <response code="400">If there's a problem getting the order detail.</response>
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Guid))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
     [HttpPost]
     [HasPermission(Permission.UpdateOrder)]
     public async Task<IActionResult> AddOrderDetail(
