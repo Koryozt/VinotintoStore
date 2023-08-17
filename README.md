@@ -21,6 +21,9 @@ The project follows the Clean Architecture for its structure, it's divided by la
 - WebApi: The API of the project, contains the program.cs class and includes all the DI made in the other layers.
 - App: The frontend application, made with React.
 
+## Project Database Diagram
+![VinotintoMarketplaceDiagram](https://github.com/Koryozt/VinotintoMarketplace/assets/93677342/995cc586-c12b-4653-aaef-3eaf5038a908)
+
 ## Project information
 NET version: 7.0 <br>
 ASP.NET Core version: 7.0 <br>
