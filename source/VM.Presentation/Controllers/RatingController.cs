@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VM.Application.Segregation.Ratings.Commands.AddRating;
 using VM.Application.Segregation.Ratings.Commands.Update;
 using VM.Application.Segregation.Ratings.Queries;
 using VM.Application.Segregation.Ratings.Queries.Statements;
+using VM.Application.Segregation.ShoppingCarts.Queries;
 using VM.Domain.Enums;
 using VM.Domain.Shared;
 using VM.Infrastructure.Authentication;
@@ -24,6 +26,19 @@ public sealed class RatingController : ApiController
     {
     }
 
+    /// <summary>
+    /// Gets the Rating that matches with the ID provided.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>An IActionResult containing a not null RatingResponse object.</returns>
+    /// <remarks>
+    /// Method: GET, endpoint: api/ratings/{id}
+    /// </remarks>
+    /// <response code="200">Successful</response>
+    /// <response code="400">If there's a problem getting the rating.</response>
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RatingResponse))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
     [HttpGet("{id:guid}")]
     [HasPermission(Permission.ReadRating)]
     public async Task<IActionResult> GetRatingById(
@@ -39,6 +54,19 @@ public sealed class RatingController : ApiController
         return result.IsFailure ? BadRequest(result.Error) : Ok(result.Value);
     }
 
+    /// <summary>
+    /// Gets the Ratings that matches with the ProductID provided.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>An IActionResult containing a not null collection of RatingResponse objects.</returns>
+    /// <remarks>
+    /// Method: GET, endpoint: api/ratings/p/{id}
+    /// </remarks>
+    /// <response code="200">Successful</response>
+    /// <response code="400">If there's a problem getting the rating.</response>
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<RatingResponse>))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
     [HttpGet("p/{id:guid}")]
     [HasPermission(Permission.ReadRating)]
     public async Task<IActionResult> GetRatingsByProduct(
@@ -54,6 +82,19 @@ public sealed class RatingController : ApiController
         return result.IsFailure ? BadRequest(result.Error) : Ok(result.Value);
     }
 
+    /// <summary>
+    /// Creates a new rating for a specific product.
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>An IActionResult containing the GUID of the created entity.</returns>
+    /// <remarks>
+    /// Method: POST, endpoint: api/ratings/
+    /// </remarks>
+    /// <response code="200">Successful</response>
+    /// <response code="400">If there's a problem creating the rating.</response>
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Guid))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
     [HttpPost]
     [HasPermission(Permission.AddRating)]
     public async Task<IActionResult> AddRating(
@@ -74,14 +115,28 @@ public sealed class RatingController : ApiController
             Created(HttpContext.Request.Path, result.Value);
     }
 
-    [HttpPatch]
+    /// <summary>
+    /// Updates the rating that matches with the ID provided.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>An IActionResult.</returns>
+    /// <remarks>
+    /// Method: PATCH, endpoint: api/ratings/
+    /// </remarks>
+    /// <response code="204">Successful.</response>
+    /// <response code="400">If there's a problem getting the rating.</response>
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
+    [HttpPatch("{id:guid}")]
     [HasPermission(Permission.AddRating)]
     public async Task<IActionResult> UpdateRating(
+        Guid id,
         UpdateRatingRequest request,
         CancellationToken cancellationToken)
     {
         var command = new UpdateRatingCommand(
-            request.Id,
+            id,
             request.Score,
             request.Comment
             );

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VM.Application.Segregation.Users.Commands.Create;
 using VM.Application.Segregation.Users.Commands.Login;
@@ -27,6 +28,18 @@ public sealed class UserController : ApiController
     {
     }
 
+    /// <summary>
+    /// Gets the current logged user information.
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns>An IActionResult containing a not null UserResponse object.</returns>
+    /// <remarks>
+    /// Method: GET, endpoint: api/users/me
+    /// </remarks>
+    /// <response code="200">Successful</response>
+    /// <response code="404">If there's a problem getting the user.</response>
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserResponse))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     [HasPermission(Permission.ReadUser)]
     [HttpGet("me")]
     public async Task<IActionResult> MyProfile(
@@ -42,8 +55,21 @@ public sealed class UserController : ApiController
         return result.IsFailure ? NotFound(result.Error) : Ok(result.Value);
     }
 
-    [HasPermission(Permission.ReadUser)]
+    /// <summary>
+    /// Gets the user that matches the ID provided.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>An IActionResult containing a not null UserResponse object.</returns>
+    /// <remarks>
+    /// Method: GET, endpoint: api/users/{id}
+    /// </remarks>
+    /// <response code="200">Successful</response>
+    /// <response code="404">If there's a problem getting the user.</response>
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserResponse))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Error))]
     [HttpGet("{id:guid}")]
+    [HasPermission(Permission.ReadUser)]
     public async Task<IActionResult> GetUserById(
         Guid id,
         CancellationToken cancellationToken)
@@ -56,6 +82,19 @@ public sealed class UserController : ApiController
         return result.IsFailure ? NotFound(result.Error) : Ok(result.Value);
     }
 
+    /// <summary>
+    /// User login endpoint.
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>An IActionResult containing the JWT Token value.</returns>
+    /// <remarks>
+    /// Method: POST, endpoint: api/users/login
+    /// </remarks>
+    /// <response code="200">Successful</response>
+    /// <response code="404">If there's a problem authenticating the user.</response>
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
     [HttpPost("login")]
     public async Task<IActionResult> Login(
         [FromBody] LoginRequest request,
@@ -76,6 +115,19 @@ public sealed class UserController : ApiController
         return Ok(result.Value);
     }
 
+    /// <summary>
+    /// User register endpoint.
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>An IActionResult containing the GUID of the created entity.</returns>
+    /// <remarks>
+    /// Method: POST, endpoint: api/users/register
+    /// </remarks>
+    /// <response code="201">Successful</response>
+    /// <response code="404">If there's a problem creating or registering the user.</response>
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(string))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
     [HttpPost("register")]
     public async Task<IActionResult> Register(
         [FromBody] RegisterRequest request,
@@ -101,6 +153,19 @@ public sealed class UserController : ApiController
             result.Value);
     }
 
+    /// <summary>
+    /// Updates the current logged in user's firstname or lastname.
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>An IActionResult.</returns>
+    /// <remarks>
+    /// Method: PATCH, endpoint: api/users/
+    /// </remarks>
+    /// <response code="204">Successful</response>
+    /// <response code="400">If there's a problem updating the user.</response>
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
     [HttpPatch]
     [HasPermission(Permission.ReadUser)]
     [HasPermission(Permission.UpdateCurrentUser)]

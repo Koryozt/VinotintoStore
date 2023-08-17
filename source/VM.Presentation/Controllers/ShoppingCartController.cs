@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VM.Application.Segregation.CartItems.Commands.Create;
 using VM.Application.Segregation.ShoppingCarts.Queries;
@@ -26,6 +27,19 @@ public sealed class ShoppingCartController : ApiController
     {
     }
 
+    /// <summary>
+    /// Gets the ShoppingCart that matches with the ID provided.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>An IActionResult containing a not null ShoppingCartResponse object.</returns>
+    /// <remarks>
+    /// Method: GET, endpoint: api/carts/{id}
+    /// </remarks>
+    /// <response code="200">Successful</response>
+    /// <response code="400">If there's a problem getting the cart.</response>
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ShoppingCartResponse))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
     [HttpGet("{id:guid}")]
     [HasPermission(Permission.ReadUser)]
     [HasPermission(Permission.ReadShoppingCart)]
@@ -43,6 +57,20 @@ public sealed class ShoppingCartController : ApiController
             Ok(response.Value);
     }
 
+
+    /// <summary>
+    /// Gets the ShoppingCart that matches with the UserID provided.
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>An IActionResult containing a not null ShoppingCartResponse object.</returns>
+    /// <remarks>
+    /// Method: GET, endpoint: api/carts/u/{id}
+    /// </remarks>
+    /// <response code="200">Successful</response>
+    /// <response code="400">If there's a problem getting the cart.</response>
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ShoppingCartResponse))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
     [HttpGet("u/{userId:guid}")]
     [HasPermission(Permission.ReadUser)]
     [HasPermission(Permission.ReadShoppingCart)]
@@ -60,6 +88,19 @@ public sealed class ShoppingCartController : ApiController
             Ok(response.Value);
     }
 
+
+    /// <summary>
+    /// Gets the logged in user's ShoppingCart.
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns>An IActionResult containing a not null ShoppingCartResponse object.</returns>
+    /// <remarks>
+    /// Method: GET, endpoint: api/carts/mine/
+    /// </remarks>
+    /// <response code="200">Successful</response>
+    /// <response code="400">If there's a problem getting the cart.</response>
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ShoppingCartResponse))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
     [HttpGet("mine")]
     [HasPermission(Permission.ReadUser)]
     [HasPermission(Permission.ReadShoppingCart)]
@@ -78,7 +119,20 @@ public sealed class ShoppingCartController : ApiController
             Ok(response.Value);
     }
 
-    [HttpPost]
+    /// <summary>
+    /// Adds a new product to the Shopping Cart as a CartItem.
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>An IActionResult containing the GUID of the created entity.</returns>
+    /// <remarks>
+    /// Method: POST, endpoint: api/carts/
+    /// </remarks>
+    /// <response code="201">Successful</response>
+    /// <response code="400">If there's a problem adding the cart item.</response>
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Guid))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Error))]
+    [HttpPost("add")]
     [HasPermission(Permission.ReadShoppingCart)]
     [HasPermission(Permission.ReadUser)]
     [HasPermission(Permission.UpdateCurrentUser)]

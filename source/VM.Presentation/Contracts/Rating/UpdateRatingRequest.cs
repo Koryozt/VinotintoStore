@@ -8,6 +8,5 @@ using VM.Domain.Enums;
 namespace VM.Presentation.Contracts.Rating;
 
 public sealed record UpdateRatingRequest(
-    Guid Id,
     Score Score,
     string Comment);
