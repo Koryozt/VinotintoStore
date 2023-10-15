@@ -1,14 +1,6 @@
-# Vinotinto Marketplace
+# VinotintoStore
 
-Vinotinto Marketplace is an e-commerce Web API based on the Venezuela's National Team. The Client-Side of the web application is made with these topics, and the Server-Side is made like any other e-commerce API. 
-
-## Goals
-
-The main goal of the project is to create a web application where you can buy anything related to sports, wether it's football, baseball, and any other sport. The API must authenticate and authorize the user to be able to:
-- Buy any product in the marketplace.
-- Create a order with details that contains the product to buy and also the payment information and the shipping information. The user also has to be able to cancel the order.
-- The user can add a rating to any product with its comments, with option to modify it later.
-- Any user has to be able to upload a new product and modify it. Any information about the product can be updated but the photo can't be changed.
+Vinotinto Store is just basically a template or portfolio project to show a fully developed e-commerce based on Venezuela's national team. This is for showcase purposes.
 
 ## Project Structure
 
